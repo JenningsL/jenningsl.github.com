@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>高性能Javascript编程part3 | jenningL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="响应接口Javascript和用户界面在同一个进程内运行，同一时刻只有其中一个可以运行。这意味着当Javascript代码正在运行时，用户界面不能相应输入，反之亦然。有效地管理UI线程就是要确保Javascript不能连续运行太长时间，以免影响用户体验。
+
+运行时间不能超过100ms。过长的时间导致UI更新出现可察觉的延迟。
+定时器可用于安排代码推迟执行，它使得你可以将长运行脚本分解成一系列较小的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能Javascript编程part3">
+<meta property="og:url" content="http://yoursite.com/2015/03/06/高性能Javascript编程part3/index.html">
+<meta property="og:site_name" content="jenningL">
+<meta property="og:description" content="响应接口Javascript和用户界面在同一个进程内运行，同一时刻只有其中一个可以运行。这意味着当Javascript代码正在运行时，用户界面不能相应输入，反之亦然。有效地管理UI线程就是要确保Javascript不能连续运行太长时间，以免影响用户体验。
+
+运行时间不能超过100ms。过长的时间导致UI更新出现可察觉的延迟。
+定时器可用于安排代码推迟执行，它使得你可以将长运行脚本分解成一系列较小的">
+<meta property="og:updated_time" content="2015-03-06T10:41:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能Javascript编程part3">
+<meta name="twitter:description" content="响应接口Javascript和用户界面在同一个进程内运行，同一时刻只有其中一个可以运行。这意味着当Javascript代码正在运行时，用户界面不能相应输入，反之亦然。有效地管理UI线程就是要确保Javascript不能连续运行太长时间，以免影响用户体验。
+
+运行时间不能超过100ms。过长的时间导致UI更新出现可察觉的延迟。
+定时器可用于安排代码推迟执行，它使得你可以将长运行脚本分解成一系列较小的">
+  
+    <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jenningL</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-高性能Javascript编程part3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/06/高性能Javascript编程part3/" class="article-date">
+  <time datetime="2015-03-06T09:28:56.000Z" itemprop="datePublished">2015-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      高性能Javascript编程part3
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="响应接口">响应接口</h2><p>Javascript和用户界面在同一个进程内运行，同一时刻只有其中一个可以运行。这意味着当Javascript代码正在运行时，用户界面不能相应输入，反之亦然。有效地管理UI线程就是要确保Javascript不能连续运行太长时间，以免影响用户体验。</p>
+<ul>
+<li>运行时间不能超过100ms。过长的时间导致UI更新出现可察觉的延迟。</li>
+<li>定时器可用于安排代码推迟执行，它使得你可以将长运行脚本分解成一系列较小的任务。<br>其中，可以将数据分批处理，或者将任务分割成多个子函数。<br>一、代码分片<br>(一)数据分批处理时，是否可用定时器取代循环的两个取决因素：1.此处理过程是否一定要同步处理2.数据是否一定要按顺序处理。<br>使用方法如下：<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接收三个参数：待处理数组，对每个项调用的处理函数，处理结束时执行的回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">preocessArray</span><span class="params">(items,process,callback)</span>&#123;</span></span><br><span class="line">	var todo=items.<span class="built_in">concat</span><span class="params">()</span>;</span><br><span class="line">	setTimeout<span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">	process<span class="params">(todo.shift<span class="params">()</span>)</span>;</span><br><span class="line">	if<span class="params">(todo.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">        setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        callback<span class="params">(items)</span>;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;,<span class="number">25</span>)</span>;<span class="comment">//这里选择25是考虑到浏览器的定时精度大概为15ms，因此不能小于15</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>但是上面的代码有时存在这样的问题，如果每次process函数只耗时1ms，每25ms调用一次，那么整个数组处理时间将大大增加。因此应该增加每次的调用次数。可以使用限时运行代码技术：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//processArray()方法通过一个时间检测机制，可在每个定时器中执行多次处理，限制每次处理时间最少为50ms</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedProcessArray</span><span class="params">(items,process,callback)</span>&#123;</span></span><br><span class="line">	var todo=items.<span class="built_in">concat</span><span class="params">()</span>;</span><br><span class="line">	setTimeout<span class="params">(function<span class="params">(</span><br><span class="line">	  var start=+new Date<span class="params">()</span>;//+号将Date对象转化为一个数字</span><br><span class="line">	  do&#123;</span><br><span class="line">         process<span class="params">(todo.shift<span class="params">()</span>)</span>;</span><br><span class="line">	  &#125;while<span class="params">(todo.length&gt;<span class="number">0</span>&amp;&amp;<span class="params">(+new Date<span class="params">()</span>-start&lt;<span class="number">50</span>)</span>)</span>;//在每次执行时间未到之前循环调用执行处理</span><br><span class="line">	  if<span class="params">(todo.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">       setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">	  &#125;else&#123;</span><br><span class="line">       callback<span class="params">(items)</span>;</span><br><span class="line">	  &#125;</span><br><span class="line">	)</span>,<span class="number">25</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(二)分解任务<br>将每个子任务（函数）放入一个数组：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multistep</span><span class="params">(steps,args,callback)</span>&#123;</span></span><br><span class="line">	var tasks=steps.<span class="built_in">concat</span><span class="params">()</span>;<span class="comment">//clone the array</span></span><br><span class="line">	setTimeout<span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">      var task=tasks.shift<span class="params">()</span>;</span><br><span class="line">      task<span class="params">(args||[])</span>;</span><br><span class="line">      if<span class="params">(tasks.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">        setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        callback<span class="params">()</span>;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;,<span class="number">25</span>)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>二、Web Workers网页工人线程<br>自JavaScript 诞生以来，还没有办法在浏览器 UI线程之外运行代码。网页工人线程API 改变了这种状<br>况，它引入一个接口，使代码运行而不占用浏览器UI线程的时间。作为最初的HTML 5 的一部分，网页<br>工人线程API 已经分离出去成为独立的规范（<a href="http://www.w3.org/TR/workers/" target="_blank" rel="external">http://www.w3.org/TR/workers/</a> ）。</p>
+<p>网页工人线程对网页应用来说是一个潜在的巨大性能提升，因为新的工人线程在自己的线程中运行<br>JavaScript。这意味着，工人线程中的代码运行不仅不会影响浏览器 UI，而且也不会影响其它工人线程中<br>运行的代码。<br>由于网页工人线程不绑定 UI线程，这也意味着它们将不能访问许多浏览器资源。工人线程的运行环境由下列部分组成：<br>一个浏览器对象，只包含四个属性：appName, appVersion, userAgent, 和platform<br>一个location 对象（和window里的一样，只是所有属性都是只读的）<br>一个self 对象指向全局工人线程对象<br>一个importScripts()方法，使工人线程可以加载外部JavaScript 文件<br>所有ECMAScript对象，诸如 Object，Array，Data ，等等<br>XMLHttpRequest 构造器<br>setTimeout() 和setInterval() 方法<br>close() 方法可立即停止工人线程 </p>
+<p>因为网页工人线程有不同的全局运行环境，你不能在 JavaScript 代码中创建。事实上，你需要创建一个<br>完全独立的JavaScript 文件，包含那些在工人线程中运行的代码。要创建网页工人线程，你必须传入这个<br>JavaScript 文件的 URL ： </p>
+<p><code>var worker = new Worker(&quot;code.js&quot;);</code><br> 此代码一旦执行，将为指定文件创建一个新线程和一个新的工人线程运行环境。此文件被异步下载，直</p>
+<p>到下载并运行完之后才启动工人线程。<br>工人线程和网页代码通过postMessage和onmessage事件接口进行交互。例如：</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var worker = new Worker<span class="params">(<span class="string">"code.js"</span>)</span>;   </span><br><span class="line">worker.onmessage = <span class="function"><span class="keyword">function</span><span class="params">(event)</span>&#123;</span>   </span><br><span class="line">   alert<span class="params">(event.data)</span>;   </span><br><span class="line">&#125;;   </span><br><span class="line">worker.postMessage<span class="params">(<span class="string">"Nicholas"</span>)</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//<span class="keyword">inside</span> code.js   </span><br><span class="line">lf.onmessage = function(event)&#123;   </span><br><span class="line"> self.postMessage(<span class="string">"Hello, "</span> + event.data + <span class="string">"!"</span>);   </span><br><span class="line">```    </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">当工人线程通过 importScripts()方法加载外部 JavaScript 文件，它接收一个或多个 URL 参数，指出要加</span><br><span class="line">的JavaScript 文件网址。工人线程以阻塞方式调用 importScripts()，直到所有文件加载完成并执行之后，</span><br><span class="line">本才继续运行。由于工人线程在UI线程之外运行，这种阻塞不会影响UI响应。例如：</span><br></pre></td></tr></table></figure>
+<p>//inside code.js<br>importScripts(“file1.js”, “file2.js”);<br>self.onmessage = function(event){<br>   self.postMessage(“Hello, “ + event.data + “!”);<br>};<br>```</p>
+<p>网页工人线程适合于那些纯数据的，或者与浏览器 UI没关系的长运行脚本。例如：<br>解析一个大字符串<br>编/解码一个大字符串<br>复杂数字运算<br>给一个大数组排序<br>……</p>
+<p>任何超过 100 毫秒的处理，都应当考虑工人线程方案是不是比基于定时器的方案更合适。当然，还要基<br>于浏览器是否支持工人线程。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/06/高性能Javascript编程part3/" data-id="cic98vc2e0005er2f2u10k4pq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/06/Jquery-实现全屏菜单动画/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Jquery 实现全屏菜单动画
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/05/常见排序算法Javascript实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">常见排序算法Javascript实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/07/06/secret of javascript ninja读书笔记/">webGL学习笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/">React+Boostrap+jQuery快速搭建toDoList</a>
+          </li>
+        
+          <li>
+            <a href="/2015/04/09/关于table样式的一些总结/">关于table样式的一些总结</a>
+          </li>
+        
+          <li>
+            <a href="/2015/03/31/基于mvc的javascript-Web富应用开发/">基于mvc的javascript Web富应用开发</a>
+          </li>
+        
+          <li>
+            <a href="/2015/03/22/jQuery插件编写/">jQuery插件编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Jennings<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

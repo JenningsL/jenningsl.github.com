@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>jenningL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Front-end developer">
+<meta property="og:type" content="website">
+<meta property="og:title" content="jenningL">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="jenningL">
+<meta property="og:description" content="Front-end developer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jenningL">
+<meta name="twitter:description" content="Front-end developer">
+  
+    <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jenningL</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-高性能javascript-part4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/07/高性能javascript-part4/" class="article-date">
+  <time datetime="2015-03-07T08:40:57.000Z" itemprop="datePublished">2015-03-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/07/高性能javascript-part4/">高性能javascript-part4</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前端与后台的数据传输">前端与后台的数据传输</h2><p>根据项目的具体需求，选择正确的数据格式和与之相配的传输技术。常用的数据格式有JSON和XML或者字符分割的自定义数据格式，HTML和纯文本效率极低不予考虑。XML被普遍支持，但是非常冗长且解析缓慢。JSON是轻量级的，解析迅速。字符分割的自定义格式非常轻量，在大量数据时解析速度最快，但需要编写额外的程序在服务器端构造格式，并在客户端解析。<br>一个自定义的数据格式例子如下：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数据</span></span><br><span class="line"><span class="number">1</span>:alice:Alice Smith:alice@alicesmith.com;</span><br><span class="line"><span class="number">2</span>:bob:Bob Jones:bod@bobjones.com;</span><br><span class="line"></span><br><span class="line"><span class="comment">//解析函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parseCustomFormat</span><span class="params">(responseText)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> users=[];</span><br><span class="line">	<span class="keyword">var</span> usersEncoded=responseText.split(<span class="string">';'</span>);</span><br><span class="line">	<span class="keyword">var</span> userArray;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>,len=usersEncoded.length;i&lt;len;i++)&#123;</span><br><span class="line">       userArray=userEncoded[i].split(<span class="string">':'</span>);</span><br><span class="line">       users[i]=&#123;</span><br><span class="line">          id:userArray[<span class="number">0</span>],</span><br><span class="line">          username:userArray[<span class="number">1</span>],</span><br><span class="line">          realname:userArray[<span class="number">2</span>],</span><br><span class="line">          email:userArray[<span class="number">3</span>]</span><br><span class="line">       &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> users;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>字符分割的自定义格式，使用XHR或动态脚本标签插入技术提取，使用split()解析。此技术在解析非常大的数据集时弊JSON-P技术略快，而且通常文件尺寸更小。</p>
+<p>而传输方法有使用XHR和动态脚本插入等。XHR提供最完善的控制和灵活性。动态脚本插入允许跨域请求和本地运行javascript和JSON,虽然它的接口不够安全，而且不能读取信息头或相应报文代码。</p>
+<p>除了这些格式和传输技术之外，还有一些准则有助于进一步提高Ajax速度，减少请求数量，通过javascript和css文件打包，或者使用MXHR（多部分XHR）</p>
+<h2 id="编程实践中的技巧">编程实践中的技巧</h2><ul>
+<li>创建新对象和数组使用对象直接量和数组直接量，他们比非直接量形式更快。</li>
+<li>避免重复进行相同工作。当需要检测浏览器时，使用延迟加载或条件预加载，<strong>仅进行一次判断后改写函数</strong>。</li>
+<li>考虑使用位操作，它比较底层效率更高。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/07/高性能javascript-part4/" data-id="cic98vc230004er2ffhuddt1x" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-转载：什么是jsonp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/07/转载：什么是jsonp/" class="article-date">
+  <time datetime="2015-03-07T03:46:05.000Z" itemprop="datePublished">2015-03-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/07/转载：什么是jsonp/">转载：什么是jsonp</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是JSONP">什么是JSONP</h2><p><img src="http://pic001.cnblogs.com/images/2012/145819/2012042220173342.png" alt="JSONP"><br>　　先说说JSONP是怎么产生的：<br>　　其实网上关于JSONP的讲解有很多，但却千篇一律，而且云里雾里，对于很多刚接触的人来讲理解起来有些困难，小可不才，试着用自己的方式来阐释一下这个问题，看看是否有帮助。<br>　　1、一个众所周知的问题，Ajax直接请求普通文件存在跨域无权限访问的问题，甭管你是静态页面、动态网页、web服务、WCF，只要是跨域请求，一律不准；<br>　　2、不过我们又发现，Web页面上调用js文件时则不受是否跨域的影响（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如script、img、iframe）；<br>　　3、于是可以判断，当前阶段如果想通过纯web端（ActiveX控件、服务端代理、属于未来的HTML5之Websocket等方式不算）跨域访问数据就只有一种可能，那就是在远程服务器上设法把数据装进js格式的文件里，供客户端调用和进一步处理；<br>　　4、恰巧我们已经知道有一种叫做JSON的纯字符数据格式可以简洁的描述复杂数据，更妙的是JSON还被js原生支持，所以在客户端几乎可以随心所欲的处理这种格式的数据；<br>　　5、这样子解决方案就呼之欲出了，web客户端通过与调用脚本一模一样的方式，来调用跨域服务器上动态生成的js格式文件（一般以JSON为后缀），显而易见，服务器之所以要动态生成JSON文件，目的就在于把客户端需要的数据装入进去。<br>　　6、客户端在对JSON文件调用成功之后，也就获得了自己所需的数据，剩下的就是按照自己需求进行处理和展现了，这种获取远程数据的方式看起来非常像AJAX，但其实并不一样。<br>　　7、为了便于客户端使用数据，逐渐形成了一种非正式传输协议，人们把它称作JSONP，该协议的一个要点就是允许用户传递一个callback参数给服务端，然后服务端返回数据时会将这个callback参数作为函数名来包裹住JSON数据，这样客户端就可以随意定制自己的函数来自动处理返回数据了。<br>　　如果对于callback参数如何使用还有些模糊的话，我们后面会有具体的实例来讲解。<br>　　JSONP的客户端具体实现：<br>　　不管jQuery也好，ExtJs也罢，又或者是其他支持jsonp的框架，他们幕后所做的工作都是一样的，下面我来循序渐进的说明一下jsonp在客户端的实现：<br>　　1、我们知道，哪怕跨域js文件中的代码（当然指符合web脚本安全策略的），web页面也是可以无条件执行的。<br>　　远程服务器remoteserver.com根目录下有个remote.js文件代码如下：<br>alert(‘我是远程文件’);<br>　　本地服务器localserver.com下有个jsonp.html页面代码如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://remoteserver.com/remote.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>　　毫无疑问，页面将会弹出一个提示窗体，显示跨域调用成功。<br>　　2、现在我们在jsonp.html页面定义一个函数，然后在远程remote.js中传入数据进行调用。<br>　　jsonp.html页面代码如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="nimrod"></span><br><span class="line">    <span class="keyword">var</span> localHandler = function(data)&#123;</span><br><span class="line">        alert('我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：' + data.<span class="literal">result</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"http://remoteserver.com/remote.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>　　remote.js文件代码如下：<br><code>localHandler({&quot;result&quot;:&quot;我是远程js带来的数据&quot;});</code><br>　　运行之后查看结果，页面成功弹出提示窗口，显示本地函数被跨域的远程js调用成功，并且还接收到了远程js带来的数据。很欣喜，跨域远程获取数据的目的基本实现了，但是又一个问题出现了，我怎么让远程js知道它应该调用的本地函数叫什么名字呢？毕竟是jsonp的服务者都要面对很多服务对象，而这些服务对象各自的本地函数都不相同啊？我们接着往下看。<br>　　3、聪明的开发者很容易想到，只要服务端提供的js脚本是动态生成的就行了呗，这样调用者可以传一个参数过去告诉服务端“我想要一段调用XXX函数的js代码，请你返回给我”，于是服务器就可以按照客户端的需求来生成js脚本并响应了。<br>　　看jsonp.html页面的代码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">    <span class="comment">// 得到航班信息查询结果后的回调函数</span></span><br><span class="line">    <span class="keyword">var</span> flightHandler = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">'你查询的航班结果是：票价 '</span> + data.price + <span class="string">' 元，'</span> + <span class="string">'余票 '</span> + data.tickets + <span class="string">' 张。'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）</span></span><br><span class="line">    <span class="keyword">var</span> url = <span class="string">"http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&amp;callback=flightHandler"</span>;</span><br><span class="line">    <span class="comment">// 创建script标签，设置其属性</span></span><br><span class="line">    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">    script.setAttribute(<span class="string">'src'</span>, url);</span><br><span class="line">    <span class="comment">// 把script标签加入head，此时调用开始</span></span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>].appendChild(script);</span><br><span class="line">    </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>　　这次的代码变化比较大，不再直接把远程js文件写死，而是编码实现动态查询，而这也正是jsonp客户端实现的核心部分，本例中的重点也就在于如何完成jsonp调用的全过程。<br>　　我们看到调用的url中传递了一个code参数，告诉服务器我要查的是CA1998次航班的信息，而callback参数则告诉服务器，我的本地回调函数叫做flightHandler，所以请把查询结果传入这个函数中进行调用。<br>　　OK，服务器很聪明，这个叫做flightResult.aspx的页面生成了一段这样的代码提供给jsonp.html（服务端的实现这里就不演示了，与你选用的语言无关，说到底就是拼接字符串）：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flightHandler<span class="list">(&#123;</span><br><span class="line">    <span class="string">"code"</span>: <span class="string">"CA1998"</span>,</span><br><span class="line">    <span class="string">"price"</span>: <span class="number">1780</span>,</span><br><span class="line">    <span class="string">"tickets"</span>: <span class="number">5</span></span><br><span class="line">&#125;)</span><span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>　　我们看到，传递给flightHandler函数的是一个json，它描述了航班的基本信息。运行一下页面，成功弹出提示窗口，jsonp的执行全过程顺利完成！<br>　　4、到这里为止的话，相信你已经能够理解jsonp的客户端实现原理了吧？剩下的就是如何把代码封装一下，以便于与用户界面交互，从而实现多次和重复调用。<br>　　什么？你用的是jQuery，想知道jQuery如何实现jsonp调用？好吧，那我就好人做到底，再给你一段jQuery使用jsonp的代码（我们依然沿用上面那个航班信息查询的例子，假定返回jsonp结果不变）：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">html</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.w3.org/1999/xhtml"</span> &gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">title</span>&gt;</span>Untitled Page<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line">     jQuery(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        $.ajax(&#123;</span><br><span class="line">             type: <span class="string">"get"</span>,</span><br><span class="line">             <span class="keyword">async</span>: <span class="literal">false</span>,</span><br><span class="line">             url: <span class="string">"http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998"</span>,</span><br><span class="line">             dataType: <span class="string">"jsonp"</span>,</span><br><span class="line">             jsonp: <span class="string">"callback"</span>,<span class="comment">//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)</span></span><br><span class="line">             jsonpCallback:<span class="string">"flightHandler"</span>,<span class="comment">//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据</span></span><br><span class="line">             success: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</span><br><span class="line">                 alert(<span class="string">'您查询到航班信息：票价： '</span> + json.price + <span class="string">' 元，余票： '</span> + json.tickets + <span class="string">' 张。'</span>);</span><br><span class="line">             &#125;,</span><br><span class="line">             error: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                 alert(<span class="string">'fail'</span>);</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;);</span><br><span class="line">     &#125;);</span><br><span class="line">     </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>　　是不是有点奇怪？为什么我这次没有写flightHandler这个函数呢？而且竟然也运行成功了！哈哈，这就是jQuery的功劳了，jquery在处理jsonp类型的ajax时（还是忍不住吐槽，虽然jquery也把jsonp归入了ajax，但其实它们真的不是一回事儿），自动帮你生成回调函数并把数据取出来供success属性方法来调用，是不是很爽呀？<br>　　好啦，写到这里，我已经无力再写下去，又困又累，得赶紧睡觉。朋友们要是看这不错，觉得有启发，给点个“推荐”呗！由于实在比较简单，所以就不再提供demo源码下载了。<br>　　没想到上了博客园的头条推荐。看到大家对这篇文章的认可和评论，还是很开心的，这里针对ajax与jsonp的异同再做一些补充说明：<br>　　4月20日下午补充<br>　　1、ajax和jsonp这两种技术在调用方式上“看起来”很像，目的也一样，都是请求一个url，然后把服务器返回的数据进行处理，因此jquery和ext等框架都把jsonp作为ajax的一种形式进行了封装；<br>　　2、但ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而jsonp的核心则是动态添加script标签来调用服务器提供的js脚本。<br>　　3、所以说，其实ajax与jsonp的区别不在于是否跨域，ajax通过服务端代理一样可以实现跨域，jsonp本身也不排斥同域的数据的获取。<br>　　4、还有就是，jsonp是一种方式或者说非强制性协议，如同ajax一样，它也不一定非要用json格式来传递数据，如果你愿意，字符串都行，只不过这样不利于用jsonp提供公开服务。<br>　　总而言之，jsonp不是ajax的一个特例，哪怕jquery等巨头把jsonp封装进了ajax，也不能改变这一点！</p>
+<p>原文地址：<a href="http://kb.cnblogs.com/page/139725/" target="_blank" rel="external">http://kb.cnblogs.com/page/139725/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/07/转载：什么是jsonp/" data-id="cic98vc2h0007er2fw9ta5fmx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Jquery-实现全屏菜单动画" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/06/Jquery-实现全屏菜单动画/" class="article-date">
+  <time datetime="2015-03-06T13:35:01.000Z" itemprop="datePublished">2015-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/06/Jquery-实现全屏菜单动画/">Jquery 实现全屏菜单动画</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现这个动画遇到了几个问题<br>1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 <code>transform:rotate(7deg)</code>这个css属性。<br>2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。<br>解决方法：</p>
+<h3 id="问题1：">问题1：</h3><p>在stackoverflow网上找到了这个问题的解决方法：<a href="http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。" target="_blank" rel="external">http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。</a></p>
+<h3 id="问题2：">问题2：</h3><p>关于z-index对层级覆盖的影响</p>
+<ul>
+<li>z-index只对设置了relative,absolute或static的position属性的节点起作用。</li>
+<li>没有设置position属性的节点默认层次低于设置了该属性的节点。</li>
+<li>在文档后面的节点会覆盖前面的节点。</li>
+<li>从父规则：父节点的层次决定子节点的层次。<br>具体的文章参考：<a href="http://www.neoease.com/css-z-index-property-and-layering-tree/" target="_blank" rel="external">http://www.neoease.com/css-z-index-property-and-layering-tree/</a></li>
+</ul>
+<p>最终的实现效果在我的codePen上可以看到。<a href="http://codepen.io/JenningsL/pen/PwdNjr" target="_blank" rel="external">http://codepen.io/JenningsL/pen/PwdNjr</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/06/Jquery-实现全屏菜单动画/" data-id="cic98vc3e000ter2ffb5x625k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-高性能Javascript编程part3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/06/高性能Javascript编程part3/" class="article-date">
+  <time datetime="2015-03-06T09:28:56.000Z" itemprop="datePublished">2015-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/06/高性能Javascript编程part3/">高性能Javascript编程part3</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="响应接口">响应接口</h2><p>Javascript和用户界面在同一个进程内运行，同一时刻只有其中一个可以运行。这意味着当Javascript代码正在运行时，用户界面不能相应输入，反之亦然。有效地管理UI线程就是要确保Javascript不能连续运行太长时间，以免影响用户体验。</p>
+<ul>
+<li>运行时间不能超过100ms。过长的时间导致UI更新出现可察觉的延迟。</li>
+<li>定时器可用于安排代码推迟执行，它使得你可以将长运行脚本分解成一系列较小的任务。<br>其中，可以将数据分批处理，或者将任务分割成多个子函数。<br>一、代码分片<br>(一)数据分批处理时，是否可用定时器取代循环的两个取决因素：1.此处理过程是否一定要同步处理2.数据是否一定要按顺序处理。<br>使用方法如下：<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接收三个参数：待处理数组，对每个项调用的处理函数，处理结束时执行的回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">preocessArray</span><span class="params">(items,process,callback)</span>&#123;</span></span><br><span class="line">	var todo=items.<span class="built_in">concat</span><span class="params">()</span>;</span><br><span class="line">	setTimeout<span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">	process<span class="params">(todo.shift<span class="params">()</span>)</span>;</span><br><span class="line">	if<span class="params">(todo.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">        setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        callback<span class="params">(items)</span>;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;,<span class="number">25</span>)</span>;<span class="comment">//这里选择25是考虑到浏览器的定时精度大概为15ms，因此不能小于15</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>但是上面的代码有时存在这样的问题，如果每次process函数只耗时1ms，每25ms调用一次，那么整个数组处理时间将大大增加。因此应该增加每次的调用次数。可以使用限时运行代码技术：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//processArray()方法通过一个时间检测机制，可在每个定时器中执行多次处理，限制每次处理时间最少为50ms</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedProcessArray</span><span class="params">(items,process,callback)</span>&#123;</span></span><br><span class="line">	var todo=items.<span class="built_in">concat</span><span class="params">()</span>;</span><br><span class="line">	setTimeout<span class="params">(function<span class="params">(</span><br><span class="line">	  var start=+new Date<span class="params">()</span>;//+号将Date对象转化为一个数字</span><br><span class="line">	  do&#123;</span><br><span class="line">         process<span class="params">(todo.shift<span class="params">()</span>)</span>;</span><br><span class="line">	  &#125;while<span class="params">(todo.length&gt;<span class="number">0</span>&amp;&amp;<span class="params">(+new Date<span class="params">()</span>-start&lt;<span class="number">50</span>)</span>)</span>;//在每次执行时间未到之前循环调用执行处理</span><br><span class="line">	  if<span class="params">(todo.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">       setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">	  &#125;else&#123;</span><br><span class="line">       callback<span class="params">(items)</span>;</span><br><span class="line">	  &#125;</span><br><span class="line">	)</span>,<span class="number">25</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(二)分解任务<br>将每个子任务（函数）放入一个数组：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multistep</span><span class="params">(steps,args,callback)</span>&#123;</span></span><br><span class="line">	var tasks=steps.<span class="built_in">concat</span><span class="params">()</span>;<span class="comment">//clone the array</span></span><br><span class="line">	setTimeout<span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">      var task=tasks.shift<span class="params">()</span>;</span><br><span class="line">      task<span class="params">(args||[])</span>;</span><br><span class="line">      if<span class="params">(tasks.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">        setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        callback<span class="params">()</span>;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;,<span class="number">25</span>)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>二、Web Workers网页工人线程<br>自JavaScript 诞生以来，还没有办法在浏览器 UI线程之外运行代码。网页工人线程API 改变了这种状<br>况，它引入一个接口，使代码运行而不占用浏览器UI线程的时间。作为最初的HTML 5 的一部分，网页<br>工人线程API 已经分离出去成为独立的规范（<a href="http://www.w3.org/TR/workers/" target="_blank" rel="external">http://www.w3.org/TR/workers/</a> ）。</p>
+<p>网页工人线程对网页应用来说是一个潜在的巨大性能提升，因为新的工人线程在自己的线程中运行<br>JavaScript。这意味着，工人线程中的代码运行不仅不会影响浏览器 UI，而且也不会影响其它工人线程中<br>运行的代码。<br>由于网页工人线程不绑定 UI线程，这也意味着它们将不能访问许多浏览器资源。工人线程的运行环境由下列部分组成：<br>一个浏览器对象，只包含四个属性：appName, appVersion, userAgent, 和platform<br>一个location 对象（和window里的一样，只是所有属性都是只读的）<br>一个self 对象指向全局工人线程对象<br>一个importScripts()方法，使工人线程可以加载外部JavaScript 文件<br>所有ECMAScript对象，诸如 Object，Array，Data ，等等<br>XMLHttpRequest 构造器<br>setTimeout() 和setInterval() 方法<br>close() 方法可立即停止工人线程 </p>
+<p>因为网页工人线程有不同的全局运行环境，你不能在 JavaScript 代码中创建。事实上，你需要创建一个<br>完全独立的JavaScript 文件，包含那些在工人线程中运行的代码。要创建网页工人线程，你必须传入这个<br>JavaScript 文件的 URL ： </p>
+<p><code>var worker = new Worker(&quot;code.js&quot;);</code><br> 此代码一旦执行，将为指定文件创建一个新线程和一个新的工人线程运行环境。此文件被异步下载，直</p>
+<p>到下载并运行完之后才启动工人线程。<br>工人线程和网页代码通过postMessage和onmessage事件接口进行交互。例如：</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var worker = new Worker<span class="params">(<span class="string">"code.js"</span>)</span>;   </span><br><span class="line">worker.onmessage = <span class="function"><span class="keyword">function</span><span class="params">(event)</span>&#123;</span>   </span><br><span class="line">   alert<span class="params">(event.data)</span>;   </span><br><span class="line">&#125;;   </span><br><span class="line">worker.postMessage<span class="params">(<span class="string">"Nicholas"</span>)</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//<span class="keyword">inside</span> code.js   </span><br><span class="line">lf.onmessage = function(event)&#123;   </span><br><span class="line"> self.postMessage(<span class="string">"Hello, "</span> + event.data + <span class="string">"!"</span>);   </span><br><span class="line">```    </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">当工人线程通过 importScripts()方法加载外部 JavaScript 文件，它接收一个或多个 URL 参数，指出要加</span><br><span class="line">的JavaScript 文件网址。工人线程以阻塞方式调用 importScripts()，直到所有文件加载完成并执行之后，</span><br><span class="line">本才继续运行。由于工人线程在UI线程之外运行，这种阻塞不会影响UI响应。例如：</span><br></pre></td></tr></table></figure>
+<p>//inside code.js<br>importScripts(“file1.js”, “file2.js”);<br>self.onmessage = function(event){<br>   self.postMessage(“Hello, “ + event.data + “!”);<br>};<br>```</p>
+<p>网页工人线程适合于那些纯数据的，或者与浏览器 UI没关系的长运行脚本。例如：<br>解析一个大字符串<br>编/解码一个大字符串<br>复杂数字运算<br>给一个大数组排序<br>……</p>
+<p>任何超过 100 毫秒的处理，都应当考虑工人线程方案是不是比基于定时器的方案更合适。当然，还要基<br>于浏览器是否支持工人线程。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/06/高性能Javascript编程part3/" data-id="cic98vc2e0005er2f2u10k4pq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-常见排序算法Javascript实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/05/常见排序算法Javascript实现/" class="article-date">
+  <time datetime="2015-03-05T13:19:29.000Z" itemprop="datePublished">2015-03-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/05/常见排序算法Javascript实现/">常见排序算法Javascript实现</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>常见的排序算法有冒泡排序、选择排序、插入排序、希尔排序、归并排序、快速排序等。</p>
+<h3 id="冒泡排序">冒泡排序</h3><p>冒泡排序是最简单的排序算法之一，但是性能很差，总的平均时间复杂度为O(n^2),在数据量很小的时候可以使用。算法的基本思想是:<br>1.设数组有N个元素。从i=0开始,比较a[i]和a[i+1]的大小，如果a[i]&gt;a[i+1]，则交换这两个数的位置。直到i=N。<br>2.重复步骤1，不过这次执行到i=N-1<br>3.重复步骤1，不过这次执行到i=N-2<br>…<br>4.直到N=0则排序完成</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//冒泡法排序，增序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span><span class="params">(array,dir)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> len=<span class="keyword">array</span>.length,</span><br><span class="line">	    i,j;<span class="comment">//i相当于内循环结束的索引值,每次外循环-1</span></span><br><span class="line">	<span class="keyword">for</span>(i=len-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;=i;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(<span class="keyword">array</span>[j]&gt;<span class="keyword">array</span>[j+<span class="number">1</span>])</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="keyword">var</span> temp=<span class="keyword">array</span>[j];</span><br><span class="line">					<span class="keyword">array</span>[j]=<span class="keyword">array</span>[j+<span class="number">1</span>];</span><br><span class="line">					<span class="keyword">array</span>[j+<span class="number">1</span>]=temp;</span><br><span class="line">				&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">array</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="选择排序">选择排序</h3><p>从数组的开头开始，将第一个元素和其他元素进行比较。检查完所有元素后，最小的元素会被放到数组的第一个位置，然后算法会从第二个位置继续。这个过程一直进行，当进行到数组的倒数第二个位置时，所有的数据便完成了排序。每次循环最多只有一次交换。<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">selectionSort</span><span class="params">(arr)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> minIndex,temp;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;len-<span class="number">1</span>;i++)&#123;</span><br><span class="line">		minIndex=i;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> j=i+<span class="number">1</span>;j&lt;len;j++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(arr[j]&lt;arr[minIndex]) minIndex=j;</span><br><span class="line">		&#125;</span><br><span class="line">		temp=arr[i];</span><br><span class="line">		arr[i]=arr[minIndex];</span><br><span class="line">		arr[minIndex]=temp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="快速排序">快速排序</h3><p>快速排序是一种效率较高的算法，平均时间复杂度为O(nlogn)。基本思想是：在待排序的数组中找一个基准，然后从数组里面提取出来。遍历数组，将小于这个基准的数放置在它的左边，将大于这个基准的数放在它的右边。对得到的左右子数组递归执行以上步骤直到数组长度小于等于1.<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//快速排序</span></span><br><span class="line">function <span class="built_in">quickSort</span>(arr)&#123;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">if</span>(len&lt;=<span class="number">1</span>) <span class="keyword">return</span> arr;</span><br><span class="line">	<span class="keyword">var</span> pivotIndex=<span class="type">Math</span>.floor(len/<span class="number">2</span>);</span><br><span class="line">	<span class="keyword">var</span> pivot=arr.splice(pivotIndex,<span class="number">1</span>)[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">var</span> <span class="keyword">left</span>=[];</span><br><span class="line">	<span class="keyword">var</span> <span class="keyword">right</span>=[];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;len-<span class="number">1</span>;i++)&#123;<span class="comment">//len-1是因为基准元素被取出</span></span><br><span class="line">		<span class="keyword">if</span>(arr[i]&lt;pivot) <span class="keyword">left</span>.push(arr[i]);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">right</span>.push(arr[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">quickSort</span>(<span class="keyword">left</span>).concat([pivot],<span class="built_in">quickSort</span>(<span class="keyword">right</span>));<span class="comment">//递归调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="插入排序">插入排序</h3><p>插入排序，平均时间复杂度O(n^2)。基本思想是：将数组划分为两个部分，一部分是已经排序好的。剩下的部分是未排序的，每次从未排序的部分拿出一个数插入到已排序部分中而不能打乱已排好的顺序。直到整个数组都排好顺序。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//插入排序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> outer=<span class="number">1</span>;outer&lt;len;outer++)&#123;</span><br><span class="line">		<span class="keyword">var</span> inner=outer;</span><br><span class="line">		<span class="keyword">var</span> temp=arr[outer];<span class="comment">//即将插入的数</span></span><br><span class="line">		<span class="keyword">while</span>(inner&gt;<span class="number">0</span>&amp;&amp;arr[inner-<span class="number">1</span>]&gt;temp)&#123;</span><br><span class="line">			arr[inner]=arr[inner-<span class="number">1</span>];</span><br><span class="line">			inner--;</span><br><span class="line">		&#125;<span class="comment">//为即将插入的数腾出位置</span></span><br><span class="line">		arr[inner]=temp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(insertSort([<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">2</span>]));</span><br></pre></td></tr></table></figure></p>
+<h3 id="希尔排序">希尔排序</h3><p>希尔排序是插入排序的改进版，它根据一定间隔将原数组提取出多个等间隔的子数组，然后对这些子数据进行插入排序。直至间隔为1时，实际上就是对整个数组进行插入排序，由于插入排序在基本有序的情况下是很快的，所以性能能够得到改善。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shellSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> gap=<span class="built_in">Math</span>.floor(len/<span class="number">2</span>);gap&gt;=<span class="number">1</span>;gap=<span class="built_in">Math</span>.floor(gap/<span class="number">2</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> i=gap;i&lt;len;i++)&#123;</span><br><span class="line">			<span class="keyword">var</span> temp=arr[i];</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">var</span> j=i;j&gt;=gap&amp;&amp;arr[j-gap]&gt;temp;j-=gap)&#123;</span><br><span class="line">				arr[j]=arr[j-gap];</span><br><span class="line">			&#125;</span><br><span class="line">			arr[j]=temp;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(shellSort([<span class="number">6</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">5</span>,<span class="number">4</span>]));</span><br></pre></td></tr></table></figure></p>
+<h3 id="归并排序">归并排序</h3><p>归并排序在数据量很大时性能较好，最好、最坏和平均时间复杂度都是O(nlogn)。基本思想是将数组每次分成两半，一直到每个数组的长度为1则开始合并。合并的法则是：比较左半子数组和右半子数组的第一个数，取出小的那个加入到合并所得的数组中。最后将剩下的元素加在合并所得数组末尾。一直合并到整个数组被排好序。<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//归并排序</span><br><span class="line">function merge(left,right)&#123;</span><br><span class="line">	<span class="keyword">var</span> <span class="literal">result</span>=[];</span><br><span class="line">	<span class="keyword">while</span>(left.length&gt;<span class="number">0</span>&amp;&amp;right.length&gt;<span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">if</span>(left[<span class="number">0</span>]&lt;right[<span class="number">0</span>])&#123;</span><br><span class="line">			<span class="literal">result</span>.push(left.shift());</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="literal">result</span>.push(right.shift());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">result</span>.concat(left).concat(right);</span><br><span class="line">&#125;</span><br><span class="line">function mergeSort(items)&#123;</span><br><span class="line">    <span class="keyword">if</span>(items.length==<span class="number">1</span>)&#123;</span><br><span class="line">    	<span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> middle=<span class="type">Math</span>.floor(items.length/<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">var</span> left=items.slice(<span class="number">0</span>,middle);</span><br><span class="line">    <span class="keyword">var</span> right=items.slice(middle);</span><br><span class="line">    <span class="keyword">return</span> merge(mergeSort(left),mergeSort(right));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="堆排序">堆排序</h3><p>参考<a href="http://blog.csdn.net/han_xiaoyang/article/details/12163251" target="_blank" rel="external">http://blog.csdn.net/han_xiaoyang/article/details/12163251</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HeapAdjust</span><span class="params">(arr,parent,len)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> minIndex=<span class="keyword">parent</span>;</span><br><span class="line">	<span class="keyword">var</span> temp;</span><br><span class="line">	<span class="keyword">var</span> leftChild=<span class="keyword">parent</span>*<span class="number">2</span>+<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">var</span> rightChild=<span class="keyword">parent</span>*<span class="number">2</span>+<span class="number">2</span>;</span><br><span class="line">	<span class="keyword">var</span> min=arr[<span class="keyword">parent</span>];</span><br><span class="line">	<span class="keyword">if</span>(leftChild&lt;len&amp;&amp;arr[leftChild]&lt;min)</span><br><span class="line">	&#123;</span><br><span class="line">		minIndex=leftChild;</span><br><span class="line">		min=arr[leftChild];</span><br><span class="line">	&#125;<span class="keyword">if</span>(rightChild&lt;len&amp;&amp;arr[rightChild]&lt;min)</span><br><span class="line">	&#123;</span><br><span class="line">		minIndex=rightChild;</span><br><span class="line">		min=arr[rightChild];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(minIndex!=<span class="keyword">parent</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp=arr[<span class="keyword">parent</span>];</span><br><span class="line">		arr[<span class="keyword">parent</span>]=arr[minIndex];</span><br><span class="line">		arr[minIndex]=temp;</span><br><span class="line">		HeapAdjust(arr,minIndex,len);<span class="comment">//递归</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">BuildHeap</span><span class="params">(arr)</span></span>&#123;</span><br><span class="line">	len=arr.length;</span><br><span class="line">	<span class="comment">//console.log("before:"+arr);</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=Math.floor(len/<span class="number">2</span>)-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">		HeapAdjust(arr,i,len);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//console.log("after:"+arr);</span></span><br><span class="line">	<span class="comment">//return arr;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HeapSort</span><span class="params">(arr)</span></span>&#123;</span><br><span class="line">	BuildHeap(arr);</span><br><span class="line">	<span class="keyword">var</span> temp;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=arr.length-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">    	temp=arr[i];</span><br><span class="line">    	arr[i]=arr[<span class="number">0</span>];</span><br><span class="line">    	arr[<span class="number">0</span>]=temp;</span><br><span class="line">    	HeapAdjust(arr,<span class="number">0</span>,i);</span><br><span class="line">    	<span class="comment">//console.log(arr);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/05/常见排序算法Javascript实现/" data-id="cic98vc2p000ber2fdkimt64k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-正则表达式总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/04/正则表达式总结/" class="article-date">
+  <time datetime="2015-03-04T13:32:47.000Z" itemprop="datePublished">2015-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/04/正则表达式总结/">Javascript中正则表达式的总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>定义正则表达式的方法</strong></p>
+<p>定义正则表达式的方法有两种：构造函数定义和正则表达式直接量定义。例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg1 = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'\d&#123;5, 11&#125;'</span>); <span class="comment">// 通过构造函数定义</span></span><br><span class="line"><span class="keyword">var</span> reg2 = <span class="regexp">/\d&#123;5, 12&#125;/</span>; <span class="comment">// 通过直接量定义</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式直接量字符</strong><br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="command">\o</span>：NUL字符（<span class="command">\u</span>0000）</span><br><span class="line"><span class="command">\t</span>：制表符（<span class="command">\u</span>0009）</span><br><span class="line"><span class="command">\n</span>：换行符（<span class="command">\u</span>000A）</span><br><span class="line"><span class="command">\v</span>：垂直制表符（<span class="command">\u</span>000B）</span><br><span class="line"><span class="command">\f</span>：换页符（<span class="command">\u</span>000C）</span><br><span class="line"><span class="command">\r</span>：回车符（<span class="command">\u</span>000D）</span><br><span class="line"><span class="command">\xnn</span>：由十六进制数nn指定的拉丁字符，例如，<span class="command">\x</span>0A等价于<span class="command">\n</span></span><br><span class="line"><span class="command">\uxxxx</span>：由十六进制数xxxx指定的Unicode字符，例如<span class="command">\u</span>0009等价于<span class="command">\t</span></span><br><span class="line"><span class="command">\cX</span>：控制字符^X，例如，<span class="command">\cJ</span>等价于换行符<span class="command">\n</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式锚字符</strong><br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">^：匹配字符串的开头，在多行检索中，匹配一行的开头</span><br><span class="line"><span class="formula">$：匹配字符串的结尾，在多行检索中，匹配一行的结尾</span><br><span class="line"><span class="command">\b</span>：匹配一个单词的边界，简言之，就是位于字符<span class="command">\w</span>和<span class="command">\W</span>之间的位置，或位于字符<span class="command">\w</span>和字符串的开头或者结尾之间的位置（<span class="special">[</span><span class="command">\b</span><span class="special">]</span>匹配的是退格符）</span><br><span class="line"><span class="command">\B</span>：匹配非单词边界的位置</span><br><span class="line">(?=p)：零宽正向先行断言，要求接下来的字符都与p匹配，但不能包括匹配p的那些字符</span><br><span class="line">(？!p)：零宽负向先行断言，要求接下来的字符串不与p匹配</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式的字符类</strong><br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="special">[</span>...<span class="special">]</span>：方括号内的任意字符</span><br><span class="line"><span class="special">[</span>^...<span class="special">]</span>：不在方括号内的任意字符</span><br><span class="line">.：除换行符和其他Unicode行终止符之外的任意字符</span><br><span class="line"><span class="command">\w</span>：任何ASCII字符组成的单词，等价于<span class="special">[</span>a-zA-Z0-9<span class="special">]</span></span><br><span class="line"><span class="command">\W</span>：任何不是ASCII字符组成的单词，等价于<span class="special">[</span>^a-zA-Z0-9<span class="special">]</span></span><br><span class="line"><span class="command">\s</span>：任何Unicode空白符</span><br><span class="line"><span class="command">\S</span>：任何非Unicode空白符的字符，注意<span class="command">\w</span>和<span class="command">\S</span>不同</span><br><span class="line"><span class="command">\d</span>：任何ASCII数字，等价于<span class="special">[</span>0-9<span class="special">]</span></span><br><span class="line"><span class="command">\D</span>：除了ASCII数字之外的任何字符，等价于<span class="special">[</span>^0-9<span class="special">]</span></span><br><span class="line"><span class="special">[</span><span class="command">\b</span><span class="special">]</span>：退格直接量（特例）</span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式的重复字符语法</strong><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="keyword">n</span>, <span class="keyword">m</span>&#125;：匹配前一项至少<span class="keyword">n</span>次，但不能超过<span class="keyword">m</span>次</span><br><span class="line">&#123;<span class="keyword">n</span>, &#125;：匹配前一项<span class="keyword">n</span>次或者更多次</span><br><span class="line">&#123;<span class="keyword">n</span>&#125;：匹配前一项<span class="keyword">n</span>次</span><br><span class="line">?：匹配前一项0次或者1次，也就是说前一项是可选的，等价于&#123;0, 1&#125;</span><br><span class="line">+：匹配前一项1次或多次，等价于&#123;1, &#125;</span><br><span class="line"><span class="comment">*：匹配前一项0次或多次，等价于&#123;0, &#125;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式的选择、分组和引用字符</strong><br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">|：选择，匹配的是该符号左边的子表达式或右边的子表达式</span></span><br><span class="line">(…)：组合，将几个项组合为一个单元，这个单元可通过“*”、“+”、“?”和“<span class="string">|”等符号加以修饰，而且可以记住和这个组相匹配的字符串以供此后的任何使用</span></span><br><span class="line">(?: …)：只组合，把项组合到一个单元，但是不记忆与改组相匹配的字符</span><br><span class="line">\n：和第n个分组第一次匹配的字符相匹配，组是圆括号中的子表达式（也有可能是嵌套的），组索引是从左到右的左括号数，“(?:”形式的分组不编码</span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式修饰符</strong><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">i：执行不区分大小写的匹配</span><br><span class="line"><span class="keyword">g</span>：执行一个全局匹配，简言之，即找到所有的匹配，而不是在找到第一个之后就停止</span><br><span class="line"><span class="keyword">m</span>：多行匹配模式，^匹配一行的开头和字符串的开头，$匹配行的结尾和字符串的结尾</span><br></pre></td></tr></table></figure></p>
+<p><strong>用于模式匹配的String方法</strong><br>search()：它的参数是一个正则表达式，返回第一个与之匹配的子串的起始位置，如果没有匹配的子串就返回-1。如果search()的参数不是正则表达式，则首先会通过RegExp构造函数将它转换为正则表达式，search()不支持全局检索，因为它忽略修饰符g。如：<br><code>var s = &quot;JavaScript&quot;.search(/script/i); // s = 4</code><br>replace()：它用来执行检索与替换。接收两个参数，第一个是正则表达式，第二个是要进行替换的字符串。正则表达式如果设置的修饰符g，则进行全局替换，否则只替换匹配的第一个子串。如果第一个参数不是正则表达式，则直接搜索该字符串，而不是将其转换为正则表达式。如：<br><code>var s = &quot;JavaScript&quot;.replace(/java/gi, &quot;Script&quot;); // s =  Script Script</code><br>match()：它的参数是一个正则表达式，如果不是则通过RegExp转换，返回的是一个由匹配结果组成的数组。如果设置了修饰符g则进行全局匹配。如：<br><code>var d = &#39;55 ff 33 hh 77 tt&#39;.match(/\d+/g); // d = [&quot;55&quot;, &quot;33&quot;, &quot;77&quot;]</code><br>split()：这个方法用以将调用它的字符串拆分为一个子串组成的数组，使用的分隔符是split()的参数，它的参数也可以使一个正则表达式。如：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span> d = <span class="string">'123,31,453,645'</span>.split(<span class="string">','</span>); <span class="regexp">//</span> d = [<span class="string">"123"</span>, <span class="string">"31"</span>, <span class="string">"453"</span>, <span class="string">"645"</span>]</span><br><span class="line"><span class="reserved">var</span> d = <span class="string">'21 , 123,  44,  64,  67,  3'</span>.split(<span class="regexp">/\s*,\s*/</span>); <span class="regexp">//</span> d = [<span class="string">"21"</span>, <span class="string">"123"</span>, <span class="string">"44"</span>, <span class="string">"64"</span>, <span class="string">"67"</span>, <span class="string">"3"</span>]</span><br></pre></td></tr></table></figure></p>
+<p><strong>RegExp对象</strong><br>每个RegExp对象都有5个属性。属性source是一个只读字符串，包含正则表达式的文本。属性global是一个只读布尔值，用以说明这个正则表达式是否带有修饰符g。属性ignoreCase是一个只读布尔值，用以说明这个正则表达式是否带有修饰符i。属性multiline是一个只读布尔值，用以说明这个正则表达式是否带有修饰符m。属性lastIndex是一个可读可写的整数，如果匹配模式带有g修饰符，这个属性存储整个字符串中下一次检索的开始位置。<br>RegExp对象有两个方法。exec()的参数是一个字符串，它的功能与match()相似，exec()方法对一个指定的字符串执行一个正则表达式，也就是在一个字符串中执行匹配检索。如果没有找到任何匹配就返回null，找到了匹配就返回一个数组，这个数组的第一个元素包含的是与正则表达式相匹配的字符串，余下的元素是与圆括号内的子表达式相匹配的子串，不论正则表达式是否有修饰符g，都会返回一样的数组。当调用exec()的正则表达式对象具有修饰符g时，它将把当前正则表达式对象的lastIndex属性设置为紧挨着匹配子串的字符位置。当同一个正则表达式第二次调用exec()时，它将从lastIndex属性所指示的字符串处开始检索，如果exec()没有发现任何匹配结果，它会将lastIndex重置为0。如：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span> p = <span class="regexp">/Java/g</span>;</span><br><span class="line"><span class="reserved">var</span> text = <span class="string">"JavaScript is more fun than Java!"</span></span><br><span class="line"><span class="reserved">var</span> r;</span><br><span class="line"><span class="keyword">while</span>((r = p.exec(text)) != <span class="literal">null</span>) &#123;</span><br><span class="line">       <span class="built_in">console</span>.log(r, <span class="string">'lastIndex: '</span> + p.lastIndex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外一个方法是test()，它的参数是一个字符串，用test()对某个字符串进行检查，如果包含正则表达式的一个匹配结果，则返回true否则返回false。如：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span> p = <span class="regexp">/java/i</span>;</span><br><span class="line">p.test(<span class="string">'javascript'</span>); <span class="regexp">//</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p>原文链接：JavaScript中的正则表达式总结 版权所有，转载时请注明出处，违者必究。<br>注明出处格式：前端开发博客 (<a href="http://caibaojian.com/javascript-zhengze.html" target="_blank" rel="external">http://caibaojian.com/javascript-zhengze.html</a>)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/04/正则表达式总结/" data-id="cic98vc2j0008er2fdio0m9aq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-高性能Javascript" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/04/高性能Javascript/" class="article-date">
+  <time datetime="2015-03-04T01:34:34.000Z" itemprop="datePublished">2015-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/04/高性能Javascript/">高性能Javascript.Part2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="四、算法和流程控制Algorithms_and_Flow_Control">四、算法和流程控制Algorithms and Flow Control</h2><h3 id="循环">循环</h3><p>1.for-in循环由于要遍历对象的实例和原型的属性，所以需要付出更大的开销。如果迭代遍历一个有限的已知属性的列表，使用如下模式：<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var props=[<span class="string">"prop1"</span>,<span class="string">"prop2"</span>],i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span><span class="comment">(i&lt;pros.length)</span>&#123;</span><br><span class="line">	process<span class="comment">(object[props[i]])</span>;</span><br><span class="line">	i++</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.倒序循环可以略微提高循环性能：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var <span class="built_in">j</span>=items.<span class="built_in">length</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="built_in">j</span>--)<span class="cell">&#123;</span><br><span class="line">	process(items[j]);</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>这是因为任何非零数字自动强制转换为true，而零等于false。实际上控制条件已经从两次比较（迭代少于总数吗?它等于true吗）减少到一次比较（它等于true吗）。<br>3.减少循环次数（达夫设备）<br>当循环次数<em>非常大</em>时，减少迭代的次数将大大提升性能。<br>达夫设备就是这样的一种算法：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var i=items.length<span class="built_in">%</span><span class="number">8</span>;</span><br><span class="line">while<span class="params">(i)</span>&#123;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">&#125;<span class="comment">//余数部分</span></span><br><span class="line">i=Math.<span class="built_in">floor</span><span class="params">(items.length/<span class="number">8</span>)</span>;</span><br><span class="line">while<span class="params">(i)</span>&#123;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果迭代次数超过1000次，达夫设备的效率将明显提升。</p>
+<h3 id="递归">递归</h3><p>浏览器对调用栈有限制，当超过调用栈时会发生错误。<br>例如，合并排序算法是最常用的以递归实现的算法。一个简单的js实现的合并排序算法如下：<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function merge(left,right)&#123;</span><br><span class="line">	<span class="keyword">var</span> <span class="literal">result</span>=[];</span><br><span class="line">	<span class="keyword">while</span>(left.length&gt;<span class="number">0</span>&amp;&amp;right.legnth&gt;<span class="number">0</span>)&#123;</span><br><span class="line">	<span class="keyword">if</span>(left[<span class="number">0</span>]&lt;right[<span class="number">0</span>])&#123;</span><br><span class="line">	  <span class="literal">result</span>.push(left.shift());</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="literal">result</span>.push(right.shift());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">return</span> <span class="literal">result</span>.concat(left).concat(right);</span><br><span class="line">&#125;</span><br><span class="line">function mergeSort(items)&#123;</span><br><span class="line">	<span class="keyword">if</span>(items.length==<span class="number">1</span>)&#123;</span><br><span class="line">	<span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> middle=<span class="type">Math</span>.floor(items.length/<span class="number">2</span>),</span><br><span class="line">    left=items.silce(<span class="number">0</span>,middle);</span><br><span class="line">    right=items.slice(middle);</span><br><span class="line">    <span class="keyword">return</span> merge(mergeSort(left),mergeSort(right));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个算法中 mergeSort()函数被调用得相当频繁。一个具有n个项的数组总共调用2*n-1次，如果n过大，可能导致栈溢出。当发生栈溢出时，可以考虑用迭代实现：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//uses the same merge() function from previous example</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span><span class="params">()</span>&#123;</span></span><br><span class="line">	<span class="keyword">if</span><span class="params">(items.length==<span class="number">1</span>)</span>&#123;</span><br><span class="line">      return items;</span><br><span class="line">    &#125;</span><br><span class="line">    var work=[];</span><br><span class="line">    <span class="keyword">for</span><span class="params">(var i=<span class="number">0</span>,len=items.length;i&lt;len;i++)</span>&#123;</span><br><span class="line">       work.push<span class="params">([items[i]])</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    work.push<span class="params">([])</span>;<span class="comment">//in case of odd number of items</span></span><br><span class="line">    <span class="keyword">for</span><span class="params">(var lim=len;lim&gt;<span class="number">1</span>;lim=<span class="params">(lim+<span class="number">1</span>)</span>/<span class="number">2</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">for</span><span class="params">(var j=<span class="number">0</span>,k=<span class="number">0</span>;k&lt;lim;j++,k+=<span class="number">2</span>)</span>&#123;</span><br><span class="line">         work[j]=merge<span class="params">(work[k],work[k+<span class="number">1</span>])</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       work[j]=[];</span><br><span class="line">    &#125;</span><br><span class="line">    return work[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Memoization制表">Memoization制表</h3><p>减少工作量就是最好的性能优化技术。代码所做的事情越少，它的运行速度就越快。制表，通过缓存先前计算结果为后续计算所重复使用，避免了重复工作。这使得制表成为递归算法中有用的技术。<br>制表过程因每种递归函数而略有不同，单总体上具有相同的模式。为了使一个函数的制表过程更加容易，你可以定义一个memoize函数封装基本功能。例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">fucntion memoize(fundamental,cache)&#123;</span><br><span class="line">	cache=cache||&#123;&#125;;</span><br><span class="line">	<span class="variable"><span class="keyword">var</span> shell</span>=function(arg)&#123;</span><br><span class="line">      <span class="keyword">if</span>(!cache.hasOwnProperty(arg))&#123;</span><br><span class="line">        cache[arg]=fundamental(arg);</span><br><span class="line">      &#125;<span class="comment">//如果缓存中没有记录则调用递归函数调用</span></span><br><span class="line">      <span class="keyword">return</span> cache[arg];</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> shell;<span class="comment">//返回外壳函数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用方法:</span></span><br><span class="line"><span class="variable"><span class="keyword">var</span> memfactorial</span>=memoize(factorial,&#123;<span class="string">"0"</span>:<span class="number">1</span>,<span class="string">"1"</span>:<span class="number">1</span>&#125;);</span><br><span class="line"><span class="variable"><span class="keyword">var</span> fact6</span>=memfactorial(<span class="number">6</span>);</span><br><span class="line"><span class="variable"><span class="keyword">var</span> fact5</span>=memfactorial(<span class="number">5</span>);</span><br><span class="line"><span class="variable"><span class="keyword">var</span> fact4</span>=memfactorial(<span class="number">4</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这种通用制表函数与人工更新算法相比优化较少，因为只有当代码以同一参数多次调用外壳函数时才能节约时间，而递归函数不能享用中间运算结果。因此，当一个通用制表函数存在显著性能问题时，最好在这些函数中人工实现制表法。下面给出递归阶乘函数的人工制表法：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">memfactorial</span><span class="params">(n)</span>&#123;</span></span><br><span class="line">	<span class="keyword">if</span><span class="params">(!memfactorial.cache)</span>&#123;</span><br><span class="line">      memfactorial.cache=&#123;</span><br><span class="line">       <span class="string">"0"</span>:<span class="number">1</span>,</span><br><span class="line">       <span class="string">"1"</span>:<span class="number">1</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span><span class="params">(!menfactorial.cache.hasOwnProperty<span class="params">(n)</span>)</span>&#123;</span><br><span class="line">      memfactorial.cache[n]=n<span class="built_in">*</span>memfactorial<span class="params">(n-<span class="number">1</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    return memfactorial.cache[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种方法缓存了每一个中间计算结果。</p>
+<h3 id="总结">总结</h3><ul>
+<li>除非你要迭代遍历一个属性未知的对象，否则不要使用for-in循环</li>
+<li>改善循环性能的最好方法是减少每次迭代中的运算量，并减少循环迭代次数</li>
+<li>当判断条件较多时，查表法比if-else或者switch更快</li>
+<li>浏览器的调用栈尺寸限制了递归算法在Javascript中的应用，栈溢出错误导致其他代码也不能正常执行</li>
+<li>如果你遇到一个栈溢出错误，将方法修改为一个迭代算法或者使用制表法可以避免重复工作</li>
+<li>运行的代码总量越大，使用这些策略所带来的性能提升就越明显</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/04/高性能Javascript/" data-id="cic98vc2g0006er2f2v8zw892" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-高效率javascript编程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/03/高效率javascript编程/" class="article-date">
+  <time datetime="2015-03-03T08:56:49.000Z" itemprop="datePublished">2015-03-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/03/高效率javascript编程/">高效率javascript编程part1</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、加载与执行">一、加载与执行</h1><h2 id="1-脚本位置">1.脚本位置</h2><p>由于JS的阻塞特性，页面在渲染之前必须先加载和运行脚本代码。在这之前页面是一片空白且不可交互的。所以推荐：</p>
+<ul>
+<li>在body的末尾插入/<script>标签</li>
+<li>尽量将脚本文件合并,下载一个100kb的文件比下载4个25kb 的文件快</li>
+</ul>
+<h2 id="2-非阻塞脚本">2.非阻塞脚本</h2><p>动态加载脚本技术指用js动态创建script标签。当该元素添加到页面之后立即开始下载，无论在何处启动下载，文件的下载和运行都不会阻塞其他页面处理过程。你甚至可以把代码放在head部分。<br>当文件使用动态脚本节点下载时，返回的代码通常立即执行。</p>
+<p>下面的函数封装了标准实现和IE实现所需的功能：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadScript</span><span class="params">(url,callback)</span>&#123;</span></span><br><span class="line">	var script=document.createElement<span class="params">(<span class="string">"script"</span>)</span>;</span><br><span class="line">	script.type=<span class="string">"text/javascript"</span>;</span><br><span class="line">	<span class="keyword">if</span><span class="params">(script.readyState)</span><span class="comment">//ie</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span><span class="params">(script.readyState==<span class="string">"loaded"</span>||script.readyState==<span class="string">"complete"</span>)</span>&#123;</span><br><span class="line">			script.onreadystatechange=null;<span class="comment">//解除事件监听</span></span><br><span class="line">			callback<span class="params">()</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		script.onload=<span class="function"><span class="keyword">function</span><span class="params">()</span>&#123;</span></span><br><span class="line">			callback<span class="params">()</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	script.src=url;</span><br><span class="line">	document.getElementsByTagName<span class="params">(<span class="string">"head"</span>)</span>[<span class="number">0</span>].appendChild<span class="params">(script)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="推荐的做法：">推荐的做法：</h2><p>1、在html文档中仅仅包含动态加载javascrit所需的代码（放置在/</body/>的上方），然后加载页面初始化所需的除javascript之外的部分。<br>2、当初始化代码准备好之后，用它来加载其余的javascript代码</p>
+<p>代码如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="openscad"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadScript</span><span class="params">(url,callback)</span>&#123;</span></span><br><span class="line">	var script=document.createElement<span class="params">(<span class="string">"script"</span>)</span>;</span><br><span class="line">	script.type=<span class="string">"text/javascript"</span>;</span><br><span class="line">	<span class="keyword">if</span><span class="params">(script.readyState)</span><span class="comment">//ie</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span><span class="params">(script.readyState==<span class="string">"loaded"</span>||script.readyState==<span class="string">"complete"</span>)</span>&#123;</span><br><span class="line">			script.onreadystatechange=null;<span class="comment">//解除事件监听</span></span><br><span class="line">			callback<span class="params">()</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		script.onload=<span class="function"><span class="keyword">function</span><span class="params">()</span>&#123;</span></span><br><span class="line">			callback<span class="params">()</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	script.src=url;</span><br><span class="line">	document.getElementByTagName_r<span class="params">(<span class="string">"head"</span>)</span>[<span class="number">0</span>].appendChild<span class="params">(script)</span>;</span><br><span class="line">&#125;</span><br><span class="line">loadScript<span class="params">(<span class="string">"the-rest.js"</span>,function<span class="params">()</span>&#123;</span><br><span class="line">	Application.init<span class="params">()</span>;</span><br><span class="line">&#125;)</span>;</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>另外还有两种方法可以实现非阻塞下载javascript：</p>
+<ul>
+<li>为script标签添加defer属性（只适用于IE和FIREFOX)</li>
+<li>用XHR对象下载代码，并注入到页面中（会有跨域问题）</li>
+</ul>
+<h1 id="二、数据访问">二、数据访问</h1><p>+考虑到js函数中搜索变量时是从内到外逐层搜索的，因此要尽量减少全局变量的使用。必要时可以将一个全局变量暂存到一个临时的局部变量中。<br>+在使用闭包时，如果需要经常访问一些范围之外的变量（存在于外层函数的作用域内），可以将常用的域外变量存入局部变量中，然后直接访问局部变量。</p>
+<h3 id="对象成员">对象成员</h3><ul>
+<li>对对象成员进行搜索时，首先从对象实例开始，如果没有找到，那么转向搜索原型对象。</li>
+<li><p>可以使用hasOwnProperty()函数确定一个对象是否具有特定名称的实例成员（它的参数就是成员名称）。要确定对象是否具有某个名称的属性（包括原型中），你可以使用操作符in。例如：</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var book=&#123;</span><br><span class="line">	title:<span class="string">"High Performance Javascript"</span>,</span><br><span class="line">	publish:<span class="string">"Yahoo"</span></span><br><span class="line">&#125;</span><br><span class="line">alert<span class="params">(book.hasOwnProperty<span class="params">(<span class="string">"title"</span>)</span>)</span>;<span class="comment">//true</span></span><br><span class="line">alert<span class="params">(book.hasOwnProperty<span class="params">(<span class="string">"toString"</span>)</span>)</span>;<span class="comment">//false</span></span><br><span class="line">alert<span class="params">(<span class="string">"title"</span> in book)</span>;<span class="comment">//true</span></span><br><span class="line">alert<span class="params">(<span class="string">"toString"</span> in book)</span>;<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>搜索位于原型链深处的对象成员会导致搜索速度变慢。所以如果可以的话，尽量将对象成员放在实例中。</p>
+</li>
+<li>成员嵌套越深，访问速度越慢。如window.location.href比location.href慢</li>
+<li>不要在一个函数中多次读取一个对象成员的值，应该用局部变量暂存，除非该值有可能改变。</li>
+</ul>
+<h1 id="三、DOM编程">三、DOM编程</h1><p>DOM访问操作是很消耗资源的。所以要牢记以下几点：<br><em>1.最小化DOM访问，在Javascript端做尽可能多的事情</em><br><em>2.在反复访问的地方使用局部变量存放DOM引用</em><br><em>3.小心地处理HTML集合，因为他们表现出“存在性”，总是对底层文档重新查询。将集合的length属性缓存到一个变量中，在迭代中使用这个变量。如果经常操作这个集合，可以将集合拷贝到数组中。</em><br><em>4.如果可能的话，使用速度更快的API，如</em><br>document.querySelectorAll()和firstElementChild(用以过滤不是元素的节点)<br><em>5.注意重绘和重排版；批量修改风格，离线操作DOM树，缓存并减少对布局信息的访问如clientHeight等等。</em></p>
+<p><em>6.动画中使用绝对坐标，将元素提出动画流</em><br>展开/折叠动画是一种常见的交互模式。它通常包括区域扩大的几何动画，将页面的其他部分推向下方。如果区域扩大影响了渲染树的大部分，那么动画就会很卡顿。使用以下步骤可以避免对大部分页面进行重排版：<br>1）.可以”折叠/展开”的元素称为动画元素，使用绝对坐标定位，当它的尺寸改变时，就不会推移页面中其他元素的位置，而只是覆盖其他元素。<br>2）.展开动作只在动画元素上进行，这时其他元素的坐标并没有改变，换句话说，其他元素并没有因为”动画元素”的扩大而随之下移，而是任由动画覆盖。<br>3）.动画元素的动画结束时，将其他元素的位置下移到动画元素下方，界面”跳”了一下<br><em>7.使用事件托管技术最小化事件句柄数量</em></p>
+</script></li></ul>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/03/高效率javascript编程/" data-id="cic98vc1q0001er2fyiadlqdi" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript-效率/">javascript 效率</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-MarkDown一些语法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/03/MarkDown一些语法/" class="article-date">
+  <time datetime="2015-03-03T04:41:47.000Z" itemprop="datePublished">2015-03-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/03/MarkDown一些语法/">MarkDown一些语法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="什么是Markdown">什么是Markdown</h3><p>Markdown是一个将文本转化为HTML的工具。简单来说，Markdown是一个兼顾可读性与易用性的轻量级标记体系。Markdown并不追求大而全，它只关心HTML里最常用的几个标记，对于一些不常用的标记它允许直接将HTML标记插入文本。</p>
+<h3 id="语法">语法</h3><h2 id="标题">标题</h2><p>Markdown提供了两种方式（Setext和Atx）来显示标题。</p>
+<h2 id="语法：">语法：</h2><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Setext方式</span><br><span class="line"><span class="header">标题1</span><br><span class="line">=================</span></span><br><span class="line"></span><br><span class="line"><span class="header">标题2</span><br><span class="line">-----------------</span></span><br><span class="line"></span><br><span class="line">Atx方式</span><br><span class="line"># 标题1</span><br><span class="line">## 标题2</span><br><span class="line">###### 标题6</span><br></pre></td></tr></table></figure>
+<h2 id="引用">引用</h2><p>行首使用&gt;加上一个空格表示引用段落，内部可以嵌套多个引用。<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这是一个引用，</span><br><span class="line"><span class="blockquote">&gt; 这里木有换行，   </span></span><br><span class="line"><span class="blockquote">&gt; 在这里换行了。</span></span><br><span class="line"><span class="blockquote">&gt; &gt; 内部嵌套</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="列表">列表</h2><p>无序列表使用*、+或-后面加上空格来表示。</p>
+<p>语法：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">* <span class="keyword">Item </span><span class="number">1</span></span><br><span class="line">* <span class="keyword">Item </span><span class="number">2</span></span><br><span class="line">* <span class="keyword">Item </span><span class="number">3</span></span><br><span class="line"></span><br><span class="line">+ <span class="keyword">Item </span><span class="number">1</span></span><br><span class="line">+ <span class="keyword">Item </span><span class="number">2</span></span><br><span class="line">+ <span class="keyword">Item </span><span class="number">3</span></span><br><span class="line"></span><br><span class="line">- <span class="keyword">Item </span><span class="number">1</span></span><br><span class="line">- <span class="keyword">Item </span><span class="number">2</span></span><br><span class="line">- <span class="keyword">Item </span><span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="强调">强调</h2><p>Markdown 使用星号（*）和底线（_）作为标记强调字词的符号，被 * 或 _ 包围的字词会被转成用 <em> 标签包围，用两个 * 或 _ 包起来的话，则会被转成 \<strong\>，例如：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">*</span>single asterisks<span class="keyword">*</span></span><br><span class="line"></span><br><span class="line">_single underscores_</span><br><span class="line"></span><br><span class="line"><span class="keyword">*</span><span class="keyword">*</span>double asterisks<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"></span><br><span class="line">__double underscores__</span><br></pre></td></tr></table></figure></strong\></em></p>
+<h2 id="代码区域">代码区域</h2><p>在代码的前后加上```<br>注意换行，会显示行号。</p>
+<h2 id="插入图片">插入图片</h2><p>插入图片的语法如下：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">![<span class="link_label">Alt text</span>](<span class="link_url">/path/to/img.jpg</span>)</span><br><span class="line">![<span class="link_label">Alt text</span>](<span class="link_url">/path/to/img.jpg "Optional title"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>效果：<br><img src="../img/rocket.png" alt="火箭" title="标题"></p>
+<p>参考网站：<br>MARKDOWN官方文档: <a href="http://daringfireball.net/projects/markdown/syntax#link" target="_blank" rel="external">daringfireball</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/03/MarkDown一些语法/" data-id="cic98vc3c000qer2f8mv9xkjt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-javascript闭包的理解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/02/javascript闭包的理解/" class="article-date">
+  <time datetime="2015-03-02T03:33:44.000Z" itemprop="datePublished">2015-03-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/02/javascript闭包的理解/">javascript闭包的理解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一、基本概念<br>由于javascript里层函数可以访问到外层函数的变量。在函数1内部再定义一个函数2，再将这个函数2返回，即可利用函数2在函数1外部访问到函数1的变量。因此可以把javascript的闭包简单理解成”定义在一个函数内部的函数”。<br>二、闭包的作用<br>闭包可以用在许多地方。它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span><span class="params">()</span></span>&#123;</span><br><span class="line">　	　　<span class="keyword">var</span> n=<span class="number">999</span>;</span><br><span class="line">　　　	nAdd=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;n+=<span class="number">1</span>&#125;</span><br><span class="line">　　　	<span class="function"><span class="keyword">function</span> <span class="title">f2</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　　　　	alert(n);</span><br><span class="line">　　　	&#125;</span><br><span class="line">　　　	<span class="keyword">return</span> f2;</span><br><span class="line">　	&#125;</span><br><span class="line">　	<span class="keyword">var</span> result=f1();</span><br></pre></td></tr></table></figure></p>
+<p>在这段代码中，result实际上就是闭包f2函数。它一共运行了两次，第一次的值是999，第二次的值是1000。这证明了，函数f1中的局部变量n一直保存在内存中，并没有在f1调用后被自动清除。<br>为什么会这样呢？原因就在于f1是f2的父函数，而f2被赋给了一个全局变量，这导致f2始终在内存中，而f2的存在依赖于f1，因此f1也始终在内存中，不会在调用结束后，被垃圾回收机制（garbage collection）回收。<br>这段代码中另一个值得注意的地方，就是”nAdd=function(){n+=1}”这一行，首先在nAdd前面没有使用var关键字，因此nAdd是一个全局变量，而不是局部变量。其次，nAdd的值是一个匿名函数（anonymous function），而这个匿名函数本身也是一个闭包，所以nAdd相当于是一个setter，可以在函数外部对函数内部的局部变量进行操作。<br>三、使用闭包的注意点<br>1）由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。<br>2）闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。<br>3）关于this函数。匿名函数的执行环境具有全局性，因此闭包返回的函数执行时直接使用this将指向windows。如果希望this指向外层函数，方法如下：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</span><br><span class="line">　　<span class="keyword">var</span> object = &#123;</span><br><span class="line">　　　　name : <span class="string">"My Object"</span>,</span><br><span class="line">　　　　getNameFunc : <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　　　　　<span class="keyword">var</span> that = <span class="keyword">this</span>;<span class="comment">//这里将外部作用域的this对象保存在要给闭包能够访问的变量里</span></span><br><span class="line">　　　　　　<span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　　　　　　　<span class="keyword">return</span> that.name;</span><br><span class="line">　　　　　　&#125;;</span><br><span class="line">　　　　&#125;</span><br><span class="line">　　&#125;;</span><br><span class="line">　　alert(object.getNameFunc()());</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/02/javascript闭包的理解/" data-id="cic98vc30000her2f76wxja3j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    </nav>
+  
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/07/06/secret of javascript ninja读书笔记/">webGL学习笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/">React+Boostrap+jQuery快速搭建toDoList</a>
+          </li>
+        
+          <li>
+            <a href="/2015/04/09/关于table样式的一些总结/">关于table样式的一些总结</a>
+          </li>
+        
+          <li>
+            <a href="/2015/03/31/基于mvc的javascript-Web富应用开发/">基于mvc的javascript Web富应用开发</a>
+          </li>
+        
+          <li>
+            <a href="/2015/03/22/jQuery插件编写/">jQuery插件编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Jennings<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

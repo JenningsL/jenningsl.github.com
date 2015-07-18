@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>高性能Javascript.Part2 | jenningL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="四、算法和流程控制Algorithms and Flow Control循环1.for-in循环由于要遍历对象的实例和原型的属性，所以需要付出更大的开销。如果迭代遍历一个有限的已知属性的列表，使用如下模式：12345var props=[&quot;prop1&quot;,&quot;prop2&quot;],i=0;while(i&amp;lt;pros.length)&amp;#123;	process(object[props[i]]);	i++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能Javascript.Part2">
+<meta property="og:url" content="http://yoursite.com/2015/03/04/高性能Javascript/index.html">
+<meta property="og:site_name" content="jenningL">
+<meta property="og:description" content="四、算法和流程控制Algorithms and Flow Control循环1.for-in循环由于要遍历对象的实例和原型的属性，所以需要付出更大的开销。如果迭代遍历一个有限的已知属性的列表，使用如下模式：12345var props=[&quot;prop1&quot;,&quot;prop2&quot;],i=0;while(i&amp;lt;pros.length)&amp;#123;	process(object[props[i]]);	i++">
+<meta property="og:updated_time" content="2015-03-04T03:20:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能Javascript.Part2">
+<meta name="twitter:description" content="四、算法和流程控制Algorithms and Flow Control循环1.for-in循环由于要遍历对象的实例和原型的属性，所以需要付出更大的开销。如果迭代遍历一个有限的已知属性的列表，使用如下模式：12345var props=[&quot;prop1&quot;,&quot;prop2&quot;],i=0;while(i&amp;lt;pros.length)&amp;#123;	process(object[props[i]]);	i++">
+  
+    <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jenningL</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-高性能Javascript" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/04/高性能Javascript/" class="article-date">
+  <time datetime="2015-03-04T01:34:34.000Z" itemprop="datePublished">2015-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      高性能Javascript.Part2
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="四、算法和流程控制Algorithms_and_Flow_Control">四、算法和流程控制Algorithms and Flow Control</h2><h3 id="循环">循环</h3><p>1.for-in循环由于要遍历对象的实例和原型的属性，所以需要付出更大的开销。如果迭代遍历一个有限的已知属性的列表，使用如下模式：<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var props=[<span class="string">"prop1"</span>,<span class="string">"prop2"</span>],i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span><span class="comment">(i&lt;pros.length)</span>&#123;</span><br><span class="line">	process<span class="comment">(object[props[i]])</span>;</span><br><span class="line">	i++</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.倒序循环可以略微提高循环性能：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var <span class="built_in">j</span>=items.<span class="built_in">length</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="built_in">j</span>--)<span class="cell">&#123;</span><br><span class="line">	process(items[j]);</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>这是因为任何非零数字自动强制转换为true，而零等于false。实际上控制条件已经从两次比较（迭代少于总数吗?它等于true吗）减少到一次比较（它等于true吗）。<br>3.减少循环次数（达夫设备）<br>当循环次数<em>非常大</em>时，减少迭代的次数将大大提升性能。<br>达夫设备就是这样的一种算法：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var i=items.length<span class="built_in">%</span><span class="number">8</span>;</span><br><span class="line">while<span class="params">(i)</span>&#123;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">&#125;<span class="comment">//余数部分</span></span><br><span class="line">i=Math.<span class="built_in">floor</span><span class="params">(items.length/<span class="number">8</span>)</span>;</span><br><span class="line">while<span class="params">(i)</span>&#123;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">	process<span class="params">(items[i--])</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果迭代次数超过1000次，达夫设备的效率将明显提升。</p>
+<h3 id="递归">递归</h3><p>浏览器对调用栈有限制，当超过调用栈时会发生错误。<br>例如，合并排序算法是最常用的以递归实现的算法。一个简单的js实现的合并排序算法如下：<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function merge(left,right)&#123;</span><br><span class="line">	<span class="keyword">var</span> <span class="literal">result</span>=[];</span><br><span class="line">	<span class="keyword">while</span>(left.length&gt;<span class="number">0</span>&amp;&amp;right.legnth&gt;<span class="number">0</span>)&#123;</span><br><span class="line">	<span class="keyword">if</span>(left[<span class="number">0</span>]&lt;right[<span class="number">0</span>])&#123;</span><br><span class="line">	  <span class="literal">result</span>.push(left.shift());</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="literal">result</span>.push(right.shift());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">return</span> <span class="literal">result</span>.concat(left).concat(right);</span><br><span class="line">&#125;</span><br><span class="line">function mergeSort(items)&#123;</span><br><span class="line">	<span class="keyword">if</span>(items.length==<span class="number">1</span>)&#123;</span><br><span class="line">	<span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> middle=<span class="type">Math</span>.floor(items.length/<span class="number">2</span>),</span><br><span class="line">    left=items.silce(<span class="number">0</span>,middle);</span><br><span class="line">    right=items.slice(middle);</span><br><span class="line">    <span class="keyword">return</span> merge(mergeSort(left),mergeSort(right));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个算法中 mergeSort()函数被调用得相当频繁。一个具有n个项的数组总共调用2*n-1次，如果n过大，可能导致栈溢出。当发生栈溢出时，可以考虑用迭代实现：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//uses the same merge() function from previous example</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span><span class="params">()</span>&#123;</span></span><br><span class="line">	<span class="keyword">if</span><span class="params">(items.length==<span class="number">1</span>)</span>&#123;</span><br><span class="line">      return items;</span><br><span class="line">    &#125;</span><br><span class="line">    var work=[];</span><br><span class="line">    <span class="keyword">for</span><span class="params">(var i=<span class="number">0</span>,len=items.length;i&lt;len;i++)</span>&#123;</span><br><span class="line">       work.push<span class="params">([items[i]])</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    work.push<span class="params">([])</span>;<span class="comment">//in case of odd number of items</span></span><br><span class="line">    <span class="keyword">for</span><span class="params">(var lim=len;lim&gt;<span class="number">1</span>;lim=<span class="params">(lim+<span class="number">1</span>)</span>/<span class="number">2</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">for</span><span class="params">(var j=<span class="number">0</span>,k=<span class="number">0</span>;k&lt;lim;j++,k+=<span class="number">2</span>)</span>&#123;</span><br><span class="line">         work[j]=merge<span class="params">(work[k],work[k+<span class="number">1</span>])</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       work[j]=[];</span><br><span class="line">    &#125;</span><br><span class="line">    return work[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Memoization制表">Memoization制表</h3><p>减少工作量就是最好的性能优化技术。代码所做的事情越少，它的运行速度就越快。制表，通过缓存先前计算结果为后续计算所重复使用，避免了重复工作。这使得制表成为递归算法中有用的技术。<br>制表过程因每种递归函数而略有不同，单总体上具有相同的模式。为了使一个函数的制表过程更加容易，你可以定义一个memoize函数封装基本功能。例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">fucntion memoize(fundamental,cache)&#123;</span><br><span class="line">	cache=cache||&#123;&#125;;</span><br><span class="line">	<span class="variable"><span class="keyword">var</span> shell</span>=function(arg)&#123;</span><br><span class="line">      <span class="keyword">if</span>(!cache.hasOwnProperty(arg))&#123;</span><br><span class="line">        cache[arg]=fundamental(arg);</span><br><span class="line">      &#125;<span class="comment">//如果缓存中没有记录则调用递归函数调用</span></span><br><span class="line">      <span class="keyword">return</span> cache[arg];</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> shell;<span class="comment">//返回外壳函数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用方法:</span></span><br><span class="line"><span class="variable"><span class="keyword">var</span> memfactorial</span>=memoize(factorial,&#123;<span class="string">"0"</span>:<span class="number">1</span>,<span class="string">"1"</span>:<span class="number">1</span>&#125;);</span><br><span class="line"><span class="variable"><span class="keyword">var</span> fact6</span>=memfactorial(<span class="number">6</span>);</span><br><span class="line"><span class="variable"><span class="keyword">var</span> fact5</span>=memfactorial(<span class="number">5</span>);</span><br><span class="line"><span class="variable"><span class="keyword">var</span> fact4</span>=memfactorial(<span class="number">4</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这种通用制表函数与人工更新算法相比优化较少，因为只有当代码以同一参数多次调用外壳函数时才能节约时间，而递归函数不能享用中间运算结果。因此，当一个通用制表函数存在显著性能问题时，最好在这些函数中人工实现制表法。下面给出递归阶乘函数的人工制表法：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">memfactorial</span><span class="params">(n)</span>&#123;</span></span><br><span class="line">	<span class="keyword">if</span><span class="params">(!memfactorial.cache)</span>&#123;</span><br><span class="line">      memfactorial.cache=&#123;</span><br><span class="line">       <span class="string">"0"</span>:<span class="number">1</span>,</span><br><span class="line">       <span class="string">"1"</span>:<span class="number">1</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span><span class="params">(!menfactorial.cache.hasOwnProperty<span class="params">(n)</span>)</span>&#123;</span><br><span class="line">      memfactorial.cache[n]=n<span class="built_in">*</span>memfactorial<span class="params">(n-<span class="number">1</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    return memfactorial.cache[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种方法缓存了每一个中间计算结果。</p>
+<h3 id="总结">总结</h3><ul>
+<li>除非你要迭代遍历一个属性未知的对象，否则不要使用for-in循环</li>
+<li>改善循环性能的最好方法是减少每次迭代中的运算量，并减少循环迭代次数</li>
+<li>当判断条件较多时，查表法比if-else或者switch更快</li>
+<li>浏览器的调用栈尺寸限制了递归算法在Javascript中的应用，栈溢出错误导致其他代码也不能正常执行</li>
+<li>如果你遇到一个栈溢出错误，将方法修改为一个迭代算法或者使用制表法可以避免重复工作</li>
+<li>运行的代码总量越大，使用这些策略所带来的性能提升就越明显</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/04/高性能Javascript/" data-id="cic98vc2g0006er2f2v8zw892" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/04/正则表达式总结/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Javascript中正则表达式的总结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/03/高效率javascript编程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">高效率javascript编程part1</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/07/06/secret of javascript ninja读书笔记/">webGL学习笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/">React+Boostrap+jQuery快速搭建toDoList</a>
+          </li>
+        
+          <li>
+            <a href="/2015/04/09/关于table样式的一些总结/">关于table样式的一些总结</a>
+          </li>
+        
+          <li>
+            <a href="/2015/03/31/基于mvc的javascript-Web富应用开发/">基于mvc的javascript Web富应用开发</a>
+          </li>
+        
+          <li>
+            <a href="/2015/03/22/jQuery插件编写/">jQuery插件编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Jennings<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
