@@ -3,21 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Jquery 实现全屏菜单动画 | jenningL</title>
+  <title>material-ui使用笔记 | jenningL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="实现这个动画遇到了几个问题1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 transform:rotate(7deg)这个css属性。2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。解决方法：
-问题1：在stackoverflow网上找到了这个问题的解决方法：http://stackoverflow.com/ques">
+  <meta name="description" content="第一次见到material-ui的时候就被它的样式吸引了，它是基于react的组件，摸索了一下使用的方法，总结如下：
+bowserify加载能够在浏览器用node的方法加载模块，很爽啊。。最终是打包生成一个js文件,html直接引用即可
+react的context属性material-ui的组件都需要使用context属性传入一个theme。react官方还没有正式发布这个属性的文档。123456">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jquery 实现全屏菜单动画">
-<meta property="og:url" content="http://yoursite.com/2015/03/06/Jquery-实现全屏菜单动画/index.html">
+<meta property="og:title" content="material-ui使用笔记">
+<meta property="og:url" content="http://yoursite.com/2015/08/05/material-ui使用笔记/index.html">
 <meta property="og:site_name" content="jenningL">
-<meta property="og:description" content="实现这个动画遇到了几个问题1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 transform:rotate(7deg)这个css属性。2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。解决方法：
-问题1：在stackoverflow网上找到了这个问题的解决方法：http://stackoverflow.com/ques">
-<meta property="og:updated_time" content="2015-03-06T16:16:32.000Z">
+<meta property="og:description" content="第一次见到material-ui的时候就被它的样式吸引了，它是基于react的组件，摸索了一下使用的方法，总结如下：
+bowserify加载能够在浏览器用node的方法加载模块，很爽啊。。最终是打包生成一个js文件,html直接引用即可
+react的context属性material-ui的组件都需要使用context属性传入一个theme。react官方还没有正式发布这个属性的文档。123456">
+<meta property="og:updated_time" content="2015-08-05T07:01:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jquery 实现全屏菜单动画">
-<meta name="twitter:description" content="实现这个动画遇到了几个问题1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 transform:rotate(7deg)这个css属性。2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。解决方法：
-问题1：在stackoverflow网上找到了这个问题的解决方法：http://stackoverflow.com/ques">
+<meta name="twitter:title" content="material-ui使用笔记">
+<meta name="twitter:description" content="第一次见到material-ui的时候就被它的样式吸引了，它是基于react的组件，摸索了一下使用的方法，总结如下：
+bowserify加载能够在浏览器用node的方法加载模块，很爽啊。。最终是打包生成一个js文件,html直接引用即可
+react的context属性material-ui的组件都需要使用context属性传入一个theme。react官方还没有正式发布这个属性的文档。123456">
   
     <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
   
@@ -63,10 +66,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Jquery-实现全屏菜单动画" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-material-ui使用笔记" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/03/06/Jquery-实现全屏菜单动画/" class="article-date">
-  <time datetime="2015-03-06T13:35:01.000Z" itemprop="datePublished">2015-03-06</time>
+    <a href="/2015/08/05/material-ui使用笔记/" class="article-date">
+  <time datetime="2015-08-05T06:53:38.000Z" itemprop="datePublished">2015-08-05</time>
 </a>
     
   </div>
@@ -77,7 +80,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Jquery 实现全屏菜单动画
+      material-ui使用笔记
     </h1>
   
 
@@ -85,21 +88,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>实现这个动画遇到了几个问题<br>1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 <code>transform:rotate(7deg)</code>这个css属性。<br>2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。<br>解决方法：</p>
-<h3 id="问题1：">问题1：</h3><p>在stackoverflow网上找到了这个问题的解决方法：<a href="http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。" target="_blank" rel="external">http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。</a></p>
-<h3 id="问题2：">问题2：</h3><p>关于z-index对层级覆盖的影响</p>
-<ul>
-<li>z-index只对设置了relative,absolute或static的position属性的节点起作用。</li>
-<li>没有设置position属性的节点默认层次低于设置了该属性的节点。</li>
-<li>在文档后面的节点会覆盖前面的节点。</li>
-<li>从父规则：父节点的层次决定子节点的层次。<br>具体的文章参考：<a href="http://www.neoease.com/css-z-index-property-and-layering-tree/" target="_blank" rel="external">http://www.neoease.com/css-z-index-property-and-layering-tree/</a></li>
-</ul>
-<p>最终的实现效果在我的codePen上可以看到。<a href="http://codepen.io/JenningsL/pen/PwdNjr" target="_blank" rel="external">http://codepen.io/JenningsL/pen/PwdNjr</a></p>
+        <p>第一次见到material-ui的时候就被它的样式吸引了，它是基于react的组件，摸索了一下使用的方法，总结如下：</p>
+<h3 id="bowserify加载">bowserify加载</h3><p>能够在浏览器用node的方法加载模块，很爽啊。。最终是打包生成一个js文件,html直接引用即可</p>
+<h3 id="react的context属性">react的context属性</h3><p>material-ui的组件都需要使用context属性传入一个theme。react官方还没有正式发布这个属性的文档。<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span>  React = <span class="built_in">require</span>(<span class="string">'react'</span>),</span><br><span class="line">  mui = <span class="built_in">require</span>(<span class="string">'material-ui'</span>),</span><br><span class="line">  RaisedButton = mui.RaisedButton,</span><br><span class="line">  AppBar = mui.AppBar,</span><br><span class="line">  ThemeManager = <span class="keyword">new</span> mui.Styles.ThemeManager();</span><br><span class="line"></span><br><span class="line"><span class="reserved">var</span>  SomeAwesomeComponent = React.createClass(&#123;<span class="attribute">displayName</span>: <span class="string">"SomeAwesomeComponent"</span>,</span><br><span class="line"></span><br><span class="line">  <span class="attribute">childContextTypes</span>: &#123;</span><br><span class="line">    <span class="attribute">muiTheme</span>: React.PropTypes.object</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  getChildContext() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attribute">muiTheme</span>: ThemeManager.getCurrentTheme()</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        React.createElement(AppBar, &#123;<span class="attribute">title</span>: <span class="string">"Title"</span>,<span class="attribute">iconClassNameRight</span>:<span class="string">"muidocs-icon-navigation-expand-more"</span>&#125;)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>参考资料见：<a href="http://segmentfault.com/a/1190000002878442" target="_blank" rel="external">http://segmentfault.com/a/1190000002878442</a><br><a href="https://facebook.github.io/react/blog/2014/03/28/the-road-to-1.0.html#context" target="_blank" rel="external">https://facebook.github.io/react/blog/2014/03/28/the-road-to-1.0.html#context</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/06/Jquery-实现全屏菜单动画/" data-id="cidipqty20011gw2fjd0bog4n" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/08/05/material-ui使用笔记/" data-id="cidipqtwv000lgw2f96cmvo8c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -108,19 +105,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/03/07/转载：什么是jsonp/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/08/18/三栏自适应布局/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          转载：什么是jsonp
+          三栏自适应布局
         
       </div>
     </a>
   
   
-    <a href="/2015/03/06/高性能Javascript编程part3/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/07/25/es6笔记/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">高性能Javascript编程part3</div>
+      <div class="article-nav-title">es6笔记</div>
     </a>
   
 </nav>

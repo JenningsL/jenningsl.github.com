@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>垂直水平居中的方法 | jenningL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如果需要居中的对象是文字或者图片，那么很简单，line-height + text-align 就可以了inline-block 居中法将div设置为display:inline-block,就可以用文字居中的方法来居中该div了1234567891011121314151617&amp;lt;div id=&quot;parent&quot;&amp;gt;&amp;lt;div id=&quot;child&quot;&amp;gt;&amp;lt;/div&amp;gt;&amp;lt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="垂直水平居中的方法">
+<meta property="og:url" content="http://yoursite.com/2015/08/19/垂直水平居中的方法/index.html">
+<meta property="og:site_name" content="jenningL">
+<meta property="og:description" content="如果需要居中的对象是文字或者图片，那么很简单，line-height + text-align 就可以了inline-block 居中法将div设置为display:inline-block,就可以用文字居中的方法来居中该div了1234567891011121314151617&amp;lt;div id=&quot;parent&quot;&amp;gt;&amp;lt;div id=&quot;child&quot;&amp;gt;&amp;lt;/div&amp;gt;&amp;lt">
+<meta property="og:updated_time" content="2015-08-19T02:03:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="垂直水平居中的方法">
+<meta name="twitter:description" content="如果需要居中的对象是文字或者图片，那么很简单，line-height + text-align 就可以了inline-block 居中法将div设置为display:inline-block,就可以用文字居中的方法来居中该div了1234567891011121314151617&amp;lt;div id=&quot;parent&quot;&amp;gt;&amp;lt;div id=&quot;child&quot;&amp;gt;&amp;lt;/div&amp;gt;&amp;lt">
+  
+    <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jenningL</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-垂直水平居中的方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/08/19/垂直水平居中的方法/" class="article-date">
+  <time datetime="2015-08-18T16:45:41.000Z" itemprop="datePublished">2015-08-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      垂直水平居中的方法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="如果需要居中的对象是文字或者图片，那么很简单，line-height_+_text-align_就可以了">如果需要居中的对象是文字或者图片，那么很简单，line-height + text-align 就可以了</h2><h2 id="inline-block_居中法">inline-block 居中法</h2><p>将div设置为display:inline-block,就可以用文字居中的方法来居中该div了<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=<span class="string">"parent"</span>&gt;</span><br><span class="line">&lt;div id=<span class="string">"child"</span>&gt;&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">#parent &#123;<span class="variable">height</span>: <span class="number">200</span>px;</span><br><span class="line"><span class="built_in">line</span>-<span class="variable">height</span>:<span class="number">200</span>px;</span><br><span class="line"><span class="built_in">background</span>:<span class="built_in">blue</span>;</span><br><span class="line"><span class="built_in">text</span>-align:center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#child&#123;</span><br><span class="line">display:inline-block;</span><br><span class="line"><span class="built_in">background</span>:<span class="built_in">red</span>;</span><br><span class="line"><span class="variable">width</span>: <span class="number">30</span>px;</span><br><span class="line"><span class="variable">height</span>:<span class="number">30</span>px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="绝对定位加负margin法">绝对定位加负margin法</h2><p>适用于需要居中的块级元素的宽高确定的情况。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#parent</span> <span class="rules">&#123;<span class="rule"><span class="attribute">position</span>:<span class="value"> relative</span></span>;&#125;</span></span><br><span class="line"><span class="id">#child</span> <span class="rules">&#123;</span><br><span class="line"><span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">50%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">left</span>:<span class="value"> <span class="number">50%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">30%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">margin</span>:<span class="value"> -<span class="number">15%</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">25%</span></span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="绝对定位、margin:auto、四角拉伸">绝对定位、margin:auto、四角拉伸</h2><p>同样适用于需要居中的块级元素的宽高确定的情况。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="id">#parent</span> <span class="rules">&#123;</span><br><span class="line"><span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">500px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">500px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid red</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">position</span>:<span class="value"> relative</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="id">#child</span><span class="rules">&#123;</span><br><span class="line"><span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">200px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">200px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">left</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">right</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">bottom</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">margin</span>:<span class="value"> auto</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">background-color</span>:<span class="value"> <span class="hexcolor">#cc9900</span></span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="floater_div">floater div</h2><p>用一个浮动的div去居中目标div,</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"parent"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"floater"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"child"</span>&gt;Content here&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line"><span class="comment">#parent &#123;height: 250px;</span></span><br><span class="line">background:blue;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#floater &#123;</span></span><br><span class="line">float: left;</span><br><span class="line">height: <span class="number">50</span>%;</span><br><span class="line">width: <span class="number">100</span>%;</span><br><span class="line">margin-bottom: -<span class="number">50</span>px; /*目标高度的一半*/</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#child &#123;</span></span><br><span class="line">margin: <span class="number">0</span> auto;</span><br><span class="line">width: <span class="number">100</span>px;</span><br><span class="line">clear: both;</span><br><span class="line">height: <span class="number">100</span>px;</span><br><span class="line">background:green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>收集中…</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/08/19/垂直水平居中的方法/" data-id="cidipqtwa000fgw2f94fdfwhw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/08/18/三栏自适应布局/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">三栏自适应布局</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/25/es6笔记/">es6笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Jennings<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

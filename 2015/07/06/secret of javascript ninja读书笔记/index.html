@@ -5,19 +5,19 @@
   
   <title>secret of javascript ninja读书笔记 | jenningL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
-二、函数有一个鲜为人知的属性－leng">
+  <meta name="description" content="第四章－函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
+二、函数有一个鲜为人知的属性－">
 <meta property="og:type" content="article">
 <meta property="og:title" content="secret of javascript ninja读书笔记">
 <meta property="og:url" content="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/index.html">
 <meta property="og:site_name" content="jenningL">
-<meta property="og:description" content="函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
-二、函数有一个鲜为人知的属性－leng">
-<meta property="og:updated_time" content="2015-07-18T16:05:03.000Z">
+<meta property="og:description" content="第四章－函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
+二、函数有一个鲜为人知的属性－">
+<meta property="og:updated_time" content="2015-07-26T02:16:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="secret of javascript ninja读书笔记">
-<meta name="twitter:description" content="函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
-二、函数有一个鲜为人知的属性－leng">
+<meta name="twitter:description" content="第四章－函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
+二、函数有一个鲜为人知的属性－">
   
     <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
   
@@ -85,7 +85,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="函数是一等对象">函数是一等对象</h2><p>一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：<br>1.存储不重复的函数集合（常用于任务队列中）<br>2.self-memoizing-function<br>存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。</p>
+        <h2 id="第四章－函数是一等对象">第四章－函数是一等对象</h2><p>一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：<br>1.存储不重复的函数集合（常用于任务队列中）<br>2.self-memoizing-function<br>存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。</p>
 <p>二、函数有一个鲜为人知的属性－length,这个属性表示函数在声明时的参数个数。注意它跟arguments.length的区别。利用这两个属性，我们可以根据函数个数实现函数重载。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addMethod</span>(<span class="params">object,name,fn</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> old=object[name];</span><br><span class="line">	object[name]=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(fn.length==<span class="built_in">arguments</span>.length)</span><br><span class="line">			<span class="keyword">return</span> fn.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> old==<span class="string">"function"</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> old.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*用法*/</span></span><br><span class="line"><span class="keyword">var</span> ninja=&#123;&#125;;</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <p>这个例子实现了一个函数，可以给对象添加多个同名方法，在调用时该方法将自动根据参数的个数选择执行的版本。原理是每次添加一个函数时，使用一个闭包将之前版本的函数保存，然后将对象的该方法赋值为一个函数，这个函数根据当前所添加的函数在定义时的参数数量以及调用时实际传入的参数数量进行比较，决定是调用最外层的函数还是向之前的闭包寻找适合的函数。</p>
 <h2 id="如何判断一个对象是不是函数实例">如何判断一个对象是不是函数实例</h2><p>最简单的方法 typeof<br>但是这个问题在一些浏览器下会有一些问题：<br>＋ Firefox html/<object> 的typeof求值结果是function</object></p>
@@ -95,11 +95,16 @@
 </ul>
 <p>三、实现递归函数时，如何指向当前函数？<br>直接引用名字是不可靠的，利用arguments.callee据说以后会被抛弃。这里介绍了一种方法叫 inline function<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ninja=<span class="function"><span class="keyword">function</span> <span class="title">myNinja</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(终止条件)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">return</span> myNinja();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里的myNinja只能被函数内部的作用域引用到</p>
+<h2 id="第五章－闭包">第五章－闭包</h2><ul>
+<li>前面几部分关于闭包的内容都是很常见的，比如 创建私有变量，修改函数执行环境。。。</li>
+<li>闭包可以用来实现partial function(部分调用函数)和currying(函数柯里化)，两者的区别在于，partial可以任意安排预先提供的参数的位置，比如<br><code>fn.partial(a,undefined,b)</code><br>undefined的参数将在正式调用时提供.<br>而curry则只能预先提供前一个或几个参数</li>
+<li>立即执行函数可以用来防止全局变量被污染.</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="cic992nu6000gi72fopzogiw5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="cidipqtwr000kgw2fsh0wgfxu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -107,6 +112,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2015/07/25/es6笔记/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          es6笔记
+        
+      </div>
+    </a>
   
   
     <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/" id="article-nav-older" class="article-nav-link-wrap">
@@ -129,7 +143,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -138,7 +152,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
     </div>
   </div>
 
@@ -147,7 +161,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
     </div>
   </div>
 
@@ -159,23 +173,23 @@
       <ul>
         
           <li>
+            <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/25/es6笔记/">es6笔记</a>
+          </li>
+        
+          <li>
             <a href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/">React+Boostrap+jQuery快速搭建toDoList</a>
-          </li>
-        
-          <li>
-            <a href="/2015/04/09/关于table样式的一些总结/">关于table样式的一些总结</a>
-          </li>
-        
-          <li>
-            <a href="/2015/03/31/基于mvc的javascript-Web富应用开发/">基于mvc的javascript Web富应用开发</a>
-          </li>
-        
-          <li>
-            <a href="/2015/03/22/jQuery插件编写/">jQuery插件编写</a>
           </li>
         
       </ul>

@@ -3,21 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Jquery 实现全屏菜单动画 | jenningL</title>
+  <title>Tag: css 三栏布局 自适应 | jenningL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="实现这个动画遇到了几个问题1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 transform:rotate(7deg)这个css属性。2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。解决方法：
-问题1：在stackoverflow网上找到了这个问题的解决方法：http://stackoverflow.com/ques">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Jquery 实现全屏菜单动画">
-<meta property="og:url" content="http://yoursite.com/2015/03/06/Jquery-实现全屏菜单动画/index.html">
+  <meta name="description" content="Front-end developer">
+<meta property="og:type" content="website">
+<meta property="og:title" content="jenningL">
+<meta property="og:url" content="http://yoursite.com/tags/css-三栏布局-自适应/index.html">
 <meta property="og:site_name" content="jenningL">
-<meta property="og:description" content="实现这个动画遇到了几个问题1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 transform:rotate(7deg)这个css属性。2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。解决方法：
-问题1：在stackoverflow网上找到了这个问题的解决方法：http://stackoverflow.com/ques">
-<meta property="og:updated_time" content="2015-03-06T16:16:32.000Z">
+<meta property="og:description" content="Front-end developer">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jquery 实现全屏菜单动画">
-<meta name="twitter:description" content="实现这个动画遇到了几个问题1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 transform:rotate(7deg)这个css属性。2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。解决方法：
-问题1：在stackoverflow网上找到了这个问题的解决方法：http://stackoverflow.com/ques">
+<meta name="twitter:title" content="jenningL">
+<meta name="twitter:description" content="Front-end developer">
   
     <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
   
@@ -63,71 +59,39 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-Jquery-实现全屏菜单动画" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/06/Jquery-实现全屏菜单动画/" class="article-date">
-  <time datetime="2015-03-06T13:35:01.000Z" itemprop="datePublished">2015-03-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        <section id="main">
   
-    <h1 class="article-title" itemprop="name">
-      Jquery 实现全屏菜单动画
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2015" class="archive-year">2015</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2015/08/18/三栏自适应布局/" class="archive-article-date">
+  <time datetime="2015-08-18T01:59:27.000Z" itemprop="datePublished">Aug 18</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>实现这个动画遇到了几个问题<br>1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 <code>transform:rotate(7deg)</code>这个css属性。<br>2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。<br>解决方法：</p>
-<h3 id="问题1：">问题1：</h3><p>在stackoverflow网上找到了这个问题的解决方法：<a href="http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。" target="_blank" rel="external">http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。</a></p>
-<h3 id="问题2：">问题2：</h3><p>关于z-index对层级覆盖的影响</p>
-<ul>
-<li>z-index只对设置了relative,absolute或static的position属性的节点起作用。</li>
-<li>没有设置position属性的节点默认层次低于设置了该属性的节点。</li>
-<li>在文档后面的节点会覆盖前面的节点。</li>
-<li>从父规则：父节点的层次决定子节点的层次。<br>具体的文章参考：<a href="http://www.neoease.com/css-z-index-property-and-layering-tree/" target="_blank" rel="external">http://www.neoease.com/css-z-index-property-and-layering-tree/</a></li>
-</ul>
-<p>最终的实现效果在我的codePen上可以看到。<a href="http://codepen.io/JenningsL/pen/PwdNjr" target="_blank" rel="external">http://codepen.io/JenningsL/pen/PwdNjr</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/06/Jquery-实现全屏菜单动画/" data-id="cidipqty20011gw2fjd0bog4n" class="article-share-link">Share</a>
-      
-      
-    </footer>
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2015/03/07/转载：什么是jsonp/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          转载：什么是jsonp
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2015/03/06/高性能Javascript编程part3/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">高性能Javascript编程part3</div>
-    </a>
-  
-</nav>
-
-  
 </article>
-
+  
+  
+    </div></section>
+  
 </section>
         
           <aside id="sidebar">

@@ -61,6 +61,174 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-垂直水平居中的方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/08/19/垂直水平居中的方法/" class="article-date">
+  <time datetime="2015-08-18T16:45:41.000Z" itemprop="datePublished">2015-08-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="如果需要居中的对象是文字或者图片，那么很简单，line-height_+_text-align_就可以了">如果需要居中的对象是文字或者图片，那么很简单，line-height + text-align 就可以了</h2><h2 id="inline-block_居中法">inline-block 居中法</h2><p>将div设置为display:inline-block,就可以用文字居中的方法来居中该div了<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=<span class="string">"parent"</span>&gt;</span><br><span class="line">&lt;div id=<span class="string">"child"</span>&gt;&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">#parent &#123;<span class="variable">height</span>: <span class="number">200</span>px;</span><br><span class="line"><span class="built_in">line</span>-<span class="variable">height</span>:<span class="number">200</span>px;</span><br><span class="line"><span class="built_in">background</span>:<span class="built_in">blue</span>;</span><br><span class="line"><span class="built_in">text</span>-align:center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#child&#123;</span><br><span class="line">display:inline-block;</span><br><span class="line"><span class="built_in">background</span>:<span class="built_in">red</span>;</span><br><span class="line"><span class="variable">width</span>: <span class="number">30</span>px;</span><br><span class="line"><span class="variable">height</span>:<span class="number">30</span>px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="绝对定位加负margin法">绝对定位加负margin法</h2><p>适用于需要居中的块级元素的宽高确定的情况。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#parent</span> <span class="rules">&#123;<span class="rule"><span class="attribute">position</span>:<span class="value"> relative</span></span>;&#125;</span></span><br><span class="line"><span class="id">#child</span> <span class="rules">&#123;</span><br><span class="line"><span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">50%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">left</span>:<span class="value"> <span class="number">50%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">30%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50%</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">margin</span>:<span class="value"> -<span class="number">15%</span> <span class="number">0</span> <span class="number">0</span> -<span class="number">25%</span></span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="绝对定位、margin:auto、四角拉伸">绝对定位、margin:auto、四角拉伸</h2><p>同样适用于需要居中的块级元素的宽高确定的情况。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="id">#parent</span> <span class="rules">&#123;</span><br><span class="line"><span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">500px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">500px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid red</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">position</span>:<span class="value"> relative</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="id">#child</span><span class="rules">&#123;</span><br><span class="line"><span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">200px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">200px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">left</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">right</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">bottom</span>:<span class="value"> <span class="number">0px</span></span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">margin</span>:<span class="value"> auto</span></span>;</span><br><span class="line"><span class="rule"><span class="attribute">background-color</span>:<span class="value"> <span class="hexcolor">#cc9900</span></span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="floater_div">floater div</h2><p>用一个浮动的div去居中目标div,</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"parent"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"floater"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"child"</span>&gt;Content here&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line"><span class="comment">#parent &#123;height: 250px;</span></span><br><span class="line">background:blue;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#floater &#123;</span></span><br><span class="line">float: left;</span><br><span class="line">height: <span class="number">50</span>%;</span><br><span class="line">width: <span class="number">100</span>%;</span><br><span class="line">margin-bottom: -<span class="number">50</span>px; /*目标高度的一半*/</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#child &#123;</span></span><br><span class="line">margin: <span class="number">0</span> auto;</span><br><span class="line">width: <span class="number">100</span>px;</span><br><span class="line">clear: both;</span><br><span class="line">height: <span class="number">100</span>px;</span><br><span class="line">background:green;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>收集中…</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/08/19/垂直水平居中的方法/" data-id="cidipqtwa000fgw2f94fdfwhw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-三栏自适应布局" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/08/18/三栏自适应布局/" class="article-date">
+  <time datetime="2015-08-18T01:59:27.000Z" itemprop="datePublished">2015-08-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在平时的开发中，三栏布局的需求非常常见，包括垂直和水平。要求是：第一栏和最后一栏高度（或宽度）固定，中间一栏自适应。</p>
+<h2 id="垂直三栏布局">垂直三栏布局</h2><p>中间一栏设置position: absolute,然后设置top,bottom,使得该栏高度被强制拉伸到自适应高度。具体原来还不是很了解，了解了再补上。<br>参考 <a href="http://www.cnblogs.com/yoyogis/p/4040513.html" target="_blank" rel="external">http://www.cnblogs.com/yoyogis/p/4040513.html</a></p>
+<h2 id="水平三栏布局">水平三栏布局</h2><p>方法有三种：<br>参考 <a href="http://www.zhangxinxu.com/wordpress/2009/11/%E6%88%91%E7%86%9F%E7%9F%A5%E7%9A%84%E4%B8%89%E7%A7%8D%E4%B8%89%E6%A0%8F%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%BA%A6%E8%87%AA%E9%80%82%E5%BA%94%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" target="_blank" rel="external">http://www.zhangxinxu.com/wordpress/2009/11/%E6%88%91%E7%86%9F%E7%9F%A5%E7%9A%84%E4%B8%89%E7%A7%8D%E4%B8%89%E6%A0%8F%E7%BD%91%E9%A1%B5%E5%AE%BD%E5%BA%A6%E8%87%AA%E9%80%82%E5%BA%94%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/</a></p>
+<p>方法一、左右两栏用绝对定位位于左右，中间一栏用margin撑开边距居中。<br>这个方法比较简单。不贴代码了<br>方法二、margin负值法<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"main"</span>&gt;</span><br><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"body"</span>&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"left"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=<span class="string">"right"</span>&gt;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line"></span><br><span class="line">html,body&#123;</span><br><span class="line">height:<span class="number">100</span>%;</span><br><span class="line">width:<span class="number">100</span>%;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#main&#123;</span></span><br><span class="line">height:<span class="number">100</span>%;</span><br><span class="line">width:<span class="number">100</span>%;</span><br><span class="line">float:left;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#main #body&#123;</span></span><br><span class="line">margin:<span class="number">0</span> <span class="number">210</span>px;</span><br><span class="line">height:<span class="number">100</span>%;</span><br><span class="line">background:blue;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#left,#right&#123;</span></span><br><span class="line">width:<span class="number">200</span>px;</span><br><span class="line">float:left;</span><br><span class="line">height:<span class="number">100</span>%;</span><br><span class="line">background:green;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#left&#123;</span></span><br><span class="line">margin-left:-<span class="number">100</span>%;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#right&#123;</span></span><br><span class="line">margin-left:-<span class="number">200</span>px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>方法三、左右浮动，中间不浮动margin法<br>这种方法感觉是故意不触发中间的bfc,使得浮动元素覆盖中间元素，实际上感觉和方法一有点类似。<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;div id=<span class="string">"left"</span>&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=<span class="string">"right"</span>&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=<span class="string">"main"</span>&gt;&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">html,body&#123;</span><br><span class="line"><span class="label">height:</span><span class="number">100</span>%<span class="comment">;</span></span><br><span class="line"><span class="label">width:</span><span class="number">100</span>%<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">#main&#123;</span></span><br><span class="line"><span class="label">height:</span><span class="number">100</span>%<span class="comment">;</span></span><br><span class="line"><span class="label">background:</span>blue<span class="comment">;</span></span><br><span class="line"><span class="label">margin:</span><span class="number">0</span> <span class="number">210</span>px<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">#left&#123;</span></span><br><span class="line"><span class="label">width:</span><span class="number">200</span>px<span class="comment">;</span></span><br><span class="line"><span class="label">float:</span>left<span class="comment">;</span></span><br><span class="line"><span class="label">height:</span><span class="number">100</span>%<span class="comment">;</span></span><br><span class="line"><span class="label">background:</span>green<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#right&#123;</span></span><br><span class="line"><span class="label">width:</span><span class="number">200</span>px<span class="comment">;</span></span><br><span class="line"><span class="label">float:</span>right<span class="comment">;</span></span><br><span class="line"><span class="label">height:</span><span class="number">100</span>%<span class="comment">;</span></span><br><span class="line"><span class="label">background:</span>yellow<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/08/18/三栏自适应布局/" data-id="cidipqtwl000hgw2f9mg3rknb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-material-ui使用笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/08/05/material-ui使用笔记/" class="article-date">
+  <time datetime="2015-08-05T06:53:38.000Z" itemprop="datePublished">2015-08-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>第一次见到material-ui的时候就被它的样式吸引了，它是基于react的组件，摸索了一下使用的方法，总结如下：</p>
+<h3 id="bowserify加载">bowserify加载</h3><p>能够在浏览器用node的方法加载模块，很爽啊。。最终是打包生成一个js文件,html直接引用即可</p>
+<h3 id="react的context属性">react的context属性</h3><p>material-ui的组件都需要使用context属性传入一个theme。react官方还没有正式发布这个属性的文档。<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span>  React = <span class="built_in">require</span>(<span class="string">'react'</span>),</span><br><span class="line">  mui = <span class="built_in">require</span>(<span class="string">'material-ui'</span>),</span><br><span class="line">  RaisedButton = mui.RaisedButton,</span><br><span class="line">  AppBar = mui.AppBar,</span><br><span class="line">  ThemeManager = <span class="keyword">new</span> mui.Styles.ThemeManager();</span><br><span class="line"></span><br><span class="line"><span class="reserved">var</span>  SomeAwesomeComponent = React.createClass(&#123;<span class="attribute">displayName</span>: <span class="string">"SomeAwesomeComponent"</span>,</span><br><span class="line"></span><br><span class="line">  <span class="attribute">childContextTypes</span>: &#123;</span><br><span class="line">    <span class="attribute">muiTheme</span>: React.PropTypes.object</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  getChildContext() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attribute">muiTheme</span>: ThemeManager.getCurrentTheme()</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        React.createElement(AppBar, &#123;<span class="attribute">title</span>: <span class="string">"Title"</span>,<span class="attribute">iconClassNameRight</span>:<span class="string">"muidocs-icon-navigation-expand-more"</span>&#125;)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>参考资料见：<a href="http://segmentfault.com/a/1190000002878442" target="_blank" rel="external">http://segmentfault.com/a/1190000002878442</a><br><a href="https://facebook.github.io/react/blog/2014/03/28/the-road-to-1.0.html#context" target="_blank" rel="external">https://facebook.github.io/react/blog/2014/03/28/the-road-to-1.0.html#context</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/08/05/material-ui使用笔记/" data-id="cidipqtwv000lgw2f96cmvo8c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-es6笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/07/25/es6笔记/" class="article-date">
+  <time datetime="2015-07-25T01:04:28.000Z" itemprop="datePublished">2015-07-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/25/es6笔记/">es6笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>＋ 尾部递归优化，只要在es6中使用尾部递归优化就不会发生调用栈溢出。</p>
+<p>＋ WeakSet结构与Set类似，也是不重复的值的集合。但是，它与Set有两个区别。</p>
+<p>首先，WeakSet的成员只能是对象，而不能是其他类型的值。</p>
+<p>其次，WeakSet中的对象都是弱引用，即垃圾回收机制不考虑WeakSet对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不考虑该对象还存在于WeakSet之中。这个特点意味着，无法引用WeakSet的成员，因此WeakSet是不可遍历的。<br>WeakSet的一个用处，是储存DOM节点，而不用担心这些节点从文档移除时，会引发内存泄漏。</p>
+<p>＋ Map的键（是对象时）实际上是跟内存地址绑定的，只要内存地址不一样，就视为两个键。<br>如果Map的键是一个简单类型的值（数字、字符串、布尔值），则只要两个值严格相等，Map将其视为一个键，包括0和-0。另外，虽然NaN不严格相等于自身，但Map将其视为同一个键。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="cidipqtx9000ogw2fqshpx7q8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es6-笔记/">es6 笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-secret of javascript ninja读书笔记" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/07/06/secret of javascript ninja读书笔记/" class="article-date">
@@ -83,7 +251,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="函数是一等对象">函数是一等对象</h2><p>一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：<br>1.存储不重复的函数集合（常用于任务队列中）<br>2.self-memoizing-function<br>存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。</p>
+        <h2 id="第四章－函数是一等对象">第四章－函数是一等对象</h2><p>一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：<br>1.存储不重复的函数集合（常用于任务队列中）<br>2.self-memoizing-function<br>存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。</p>
 <p>二、函数有一个鲜为人知的属性－length,这个属性表示函数在声明时的参数个数。注意它跟arguments.length的区别。利用这两个属性，我们可以根据函数个数实现函数重载。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addMethod</span>(<span class="params">object,name,fn</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> old=object[name];</span><br><span class="line">	object[name]=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(fn.length==<span class="built_in">arguments</span>.length)</span><br><span class="line">			<span class="keyword">return</span> fn.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> old==<span class="string">"function"</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> old.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*用法*/</span></span><br><span class="line"><span class="keyword">var</span> ninja=&#123;&#125;;</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <p>这个例子实现了一个函数，可以给对象添加多个同名方法，在调用时该方法将自动根据参数的个数选择执行的版本。原理是每次添加一个函数时，使用一个闭包将之前版本的函数保存，然后将对象的该方法赋值为一个函数，这个函数根据当前所添加的函数在定义时的参数数量以及调用时实际传入的参数数量进行比较，决定是调用最外层的函数还是向之前的闭包寻找适合的函数。</p>
 <h2 id="如何判断一个对象是不是函数实例">如何判断一个对象是不是函数实例</h2><p>最简单的方法 typeof<br>但是这个问题在一些浏览器下会有一些问题：<br>＋ Firefox html/<object> 的typeof求值结果是function</object></p>
@@ -93,11 +261,16 @@
 </ul>
 <p>三、实现递归函数时，如何指向当前函数？<br>直接引用名字是不可靠的，利用arguments.callee据说以后会被抛弃。这里介绍了一种方法叫 inline function<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ninja=<span class="function"><span class="keyword">function</span> <span class="title">myNinja</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(终止条件)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">return</span> myNinja();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里的myNinja只能被函数内部的作用域引用到</p>
+<h2 id="第五章－闭包">第五章－闭包</h2><ul>
+<li>前面几部分关于闭包的内容都是很常见的，比如 创建私有变量，修改函数执行环境。。。</li>
+<li>闭包可以用来实现partial function(部分调用函数)和currying(函数柯里化)，两者的区别在于，partial可以任意安排预先提供的参数的位置，比如<br><code>fn.partial(a,undefined,b)</code><br>undefined的参数将在正式调用时提供.<br>而curry则只能预先提供前一个或几个参数</li>
+<li>立即执行函数可以用来防止全局变量被污染.</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="cic992nu6000gi72fopzogiw5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="cidipqtwr000kgw2fsh0wgfxu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -142,7 +315,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/" data-id="cic992nug000ki72fkdtrmpas" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/" data-id="cidipqtxk000sgw2f8ezqxg3i" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React-todoList/">React todoList</a></li></ul>
@@ -191,7 +364,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/04/09/关于table样式的一些总结/" data-id="cic992nu4000fi72fyiqjywom" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/04/09/关于table样式的一些总结/" data-id="cidipqtwg000ggw2fqq3i6kev" class="article-share-link">Share</a>
       
       
     </footer>
@@ -230,7 +403,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/31/基于mvc的javascript-Web富应用开发/" data-id="cic992nu1000ci72fnxns3akv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/31/基于mvc的javascript-Web富应用开发/" data-id="cidipqtvv000cgw2fckh2rhc5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a></li></ul>
@@ -277,7 +450,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/22/jQuery插件编写/" data-id="cic992nuc000ii72flw267m0z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/22/jQuery插件编写/" data-id="cidipqtx5000ngw2fm8wzg88y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -316,209 +489,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/17/Javascript设计模式-模式/" data-id="cic992nup000ui72f2j6ut9qd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/17/Javascript设计模式-模式/" data-id="cidipqty50012gw2fhfpfc534" class="article-share-link">Share</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Javacript设计模式-继承" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/17/Javacript设计模式-继承/" class="article-date">
-  <time datetime="2015-03-17T03:31:49.000Z" itemprop="datePublished">2015-03-17</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/17/Javacript设计模式-继承/">Javacript设计模式-继承</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="类式继承">类式继承</h2><p>在javascript中使用类式继承的方法如下：<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/*Class <span class="keyword">Person</span>*/</span><br><span class="line">function <span class="keyword">Person</span>(name)&#123;</span><br><span class="line">	this.name=name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">Person</span>.prototype=&#123;</span><br><span class="line">	constructor:<span class="keyword">Person</span>,</span><br><span class="line">	getName:function()&#123;</span><br><span class="line">		alert(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">/*Class Author*/</span><br><span class="line">function Author(name,books)&#123;</span><br><span class="line">	<span class="keyword">Person</span>.call(this,name);</span><br><span class="line">	this.books=books;</span><br><span class="line">&#125;</span><br><span class="line">Author.prototype=new <span class="keyword">Person</span>();</span><br><span class="line">Author.constructor=Author;</span><br></pre></td></tr></table></figure></p>
-<p>当然我们可以通过编写extend函数来减少反复工作</p>
-<pre><code><span class="function"><span class="keyword">function</span> <span class="title">extend</span>(<span class="params">subClass,superClass</span>)</span>{
-    <span class="keyword">var</span> F=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{};
-    F.prototype=superClass.prototype;
-    subClass.prototype=<span class="keyword">new</span> F();
-    subClass.prototype.constructor=subClass;
-
-    subClass.superClass=superClass.prototype;
-    <span class="keyword">if</span>(superClass.prototype.constructor==<span class="built_in">Object</span>.prototype.constructor){
-        superClass.prototype.constructor=superClass;
-    }<span class="comment">//确保超类的constructor属性被正确设置，即使超类就是Object本身</span>
-}
-<span class="comment">//使用方法</span>
-<span class="function"><span class="keyword">function</span> <span class="title">Author</span>(<span class="params">name,books</span>)</span>{
-    Author.superClass.constructor.call(<span class="keyword">this</span>,name);
-    <span class="keyword">this</span>.books=books;
-}
-extend(Author,Person);
-Author.prototype.getBooks=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{}
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/17/Javacript设计模式-继承/" data-id="cic992nss0000i72f1qawd4io" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-查找算法" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/15/查找算法/" class="article-date">
-  <time datetime="2015-03-15T12:49:36.000Z" itemprop="datePublished">2015-03-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/15/查找算法/">查找算法javascript实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="顺序检索">顺序检索</h2><p>这是一种简单粗暴的方法。应用80-20思想可以提高性能：将经常被检索的元素移到数组前面，也叫自组织数据。<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">seqSearch</span><span class="params">(arr,data)</span>&#123;</span></span><br><span class="line">	<span class="keyword">for</span><span class="params">(var i=<span class="number">0</span>;i&lt;arr.length;i++)</span>&#123;</span><br><span class="line">	    <span class="keyword">if</span><span class="params">(arr[i]==data)</span>&#123;</span><br><span class="line">	    <span class="keyword">if</span><span class="params">(i&gt;<span class="number">0</span>)</span> swap<span class="params">(arr,i,i-<span class="number">1</span>)</span>;<span class="comment">//向前移动一位</span></span><br><span class="line"></span><br><span class="line">	    return <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	return <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="二分查找">二分查找</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">binSearch</span><span class="params">(arr,data)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> tail=arr.length-<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">var</span> head=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(head&lt;=tail)&#123;</span><br><span class="line">		<span class="keyword">var</span> mid=math.floor((head+tail)/<span class="number">2</span>);</span><br><span class="line">		<span class="keyword">if</span>(data&gt;arr[mid])&#123;</span><br><span class="line">			head=mid+<span class="number">1</span>;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(data&lt;arr[mid])&#123;</span><br><span class="line">			tail=mid-<span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">return</span> mid;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/15/查找算法/" data-id="cic992ntu0009i72ftybdscx3" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ajax学习" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/13/ajax学习/" class="article-date">
-  <time datetime="2015-03-13T14:35:00.000Z" itemprop="datePublished">2015-03-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/13/ajax学习/">ajax学习</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="创建XMLHttpRequest">创建XMLHttpRequest</h2><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> request;</span><br><span class="line"><span class="keyword">if</span>(<span class="built_in">window</span>.XMLHttpRequest)&#123;</span><br><span class="line">	request=<span class="keyword">new</span> XMLHttpRequest()<span class="comment">//IE7+,Firefox,chrome,opera,safari</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	request=<span class="keyword">new</span> ActiveXObject(<span class="string">"Microsoft.XMLHTTP"</span>);<span class="comment">//ie5,6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="HTTP请求包括">HTTP请求包括</h2><p>1.方法或动作,GET POST<br>2.URL<br>3.请求头<br>之间有一个空行，非常重要<br>4.请求体</p>
-<h2 id="GET">GET</h2><ul>
-<li>一般用于信息获取</li>
-<li>使用URL传递参数，所以是公开的</li>
-<li>对所发的信息的数量有限制，一般在2000个字符</li>
-<li>幂等的（无论执行多少次，效果都是一样的）</li>
-</ul>
-<h2 id="POST">POST</h2><ul>
-<li>一般用于修改服务器上的资源</li>
-<li>对所发送的信息的数量无限制</li>
-</ul>
-<h2 id="HTTP响应包括">HTTP响应包括</h2><p>1.状态码，数字加文字<br>  1XX:表示收到浏览器请求，正在进一步处理中<br>  2XX：成功<br>  3XX:重定向，表示请求没有成功，客户端必须进行进一步的行动<br>  4XX:客户端错误<br>  5XX：服务器错误，表示服务器不能完成对请求的处理<br>2.响应头<br>3.响应体</p>
-<h2 id="XML发送请求">XML发送请求</h2><p><code>open(method,url,async)//async默认true,表示异步</code><br><code>send(string)</code></p>
-<h2 id="example">example</h2><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">request.open<span class="params">(<span class="string">"POST"</span>,<span class="string">"create.php"</span>,<span class="literal">true</span>)</span>;</span><br><span class="line">request.setRequestHeader<span class="params">(<span class="string">"Content-type"</span>,<span class="string">"application/x-www-form-urlencoded"</span>)</span>;</span><br><span class="line">send<span class="params">(<span class="string">"name=ljl&amp;sex=male"</span>)</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="XML取得响应">XML取得响应</h2><p>responseText:获得字符串形式的相应数据<br>status和statusText:以数字和文本形式返回HTTP状态码<br>getAllResponseHeader():获取所有的响应报头<br>getResponseHeader()</p>
-<p>readyState:</p>
-<ul>
-<li>0-open还没调用</li>
-<li>1-服务器连接已建立，open已调用了</li>
-<li>2-请求已接受，收到头信息了</li>
-<li>3-处理中，收到响应主题了</li>
-<li>4-响应完成了<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">request.onreadystatechange=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(request.readyState===<span class="number">4</span>&amp;&amp;request.<span class="keyword">status</span>===<span class="number">200</span>)</span><br><span class="line">		//<span class="keyword">do</span> somethings request.responseText</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="JSON解析">JSON解析</h2><p>1.eval(‘(‘+jsondata+’)’);//不光会解析，还会执行其中的脚本代码，不安全<br>2.JSON.parse(jsondata);//不会执行其中代码，会报错</p>
-<p>JSONLint.com//JSON字符串在线校验</p>
-<h2 id="跨域">跨域</h2><p>当协议、域名、端口号任一不同时，都算跨域<br>处理方法一：<br>代理<br>在同域名的web服务器端创建一个代理，实际上把数据获取转移到了后台<br>处理方法二：<br>JSONP。jquery中，只需要将定义回调函数callback,然后修改ajax的参数type:”jsonp”,jsonp:”callback”。<br>JSONP只能代替GET请求，不支持POST请求。<br>处理方法三：<br>HTML5提供的XMLHttpRequest Level2已经实现了跨域访问以及其他的一些新功能<br>IE10以下的版本都不支持<br>在服务器端做一些小小的改造：<br><code>header(&#39;Access-Control-Allow-Origin:*&#39;);</code><br><code>header(&#39;Access-Control-Allow-Method:GET,POST&#39;);</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/13/ajax学习/" data-id="cic992nuf000ji72fjwhr4j8m" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Nodejs-express-mongodb入门实践教程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/08/Nodejs-express-mongodb入门实践教程/" class="article-date">
-  <time datetime="2015-03-08T12:44:07.000Z" itemprop="datePublished">2015-03-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/08/Nodejs-express-mongodb入门实践教程/">Nodejs+express+mongodb入门实践教程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近发现了两篇适合前端开发者学习的关于nodejs+express+mongodb建站的教程，非常基础，但是条例清晰，而且比较新。地址如下：</p>
-<ul>
-<li><a href="http://cwbuecheler.com/web/tutorials/2013/node-express-mongo/" target="_blank" rel="external">THE DEAD-SIMPLE STEP-BY-STEP GUIDE FOR FRONT-END DEVELOPERS TO GETTING UP AND RUNNING WITH NODE.JS, EXPRESS, JADE, AND MONGODB</a></li>
-<li><a href="http://cwbuecheler.com/web/tutorials/2014/restful-web-app-node-express-mongodb/" target="_blank" rel="external">CREATING A SIMPLE RESTFUL WEB APP WITH NODE.JS, EXPRESS, AND MONGODB</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/08/Nodejs-express-mongodb入门实践教程/" data-id="cic992nui000ni72f2dqmwc8e" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a></li></ul>
-
     </footer>
   </div>
   
@@ -541,7 +514,7 @@ Author.prototype.getBooks=<span class="function"><span class="keyword">function<
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -550,7 +523,7 @@ Author.prototype.getBooks=<span class="function"><span class="keyword">function<
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
     </div>
   </div>
 
@@ -559,7 +532,7 @@ Author.prototype.getBooks=<span class="function"><span class="keyword">function<
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
     </div>
   </div>
 
@@ -571,23 +544,23 @@ Author.prototype.getBooks=<span class="function"><span class="keyword">function<
       <ul>
         
           <li>
+            <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/25/es6笔记/">es6笔记</a>
+          </li>
+        
+          <li>
             <a href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/">React+Boostrap+jQuery快速搭建toDoList</a>
-          </li>
-        
-          <li>
-            <a href="/2015/04/09/关于table样式的一些总结/">关于table样式的一些总结</a>
-          </li>
-        
-          <li>
-            <a href="/2015/03/31/基于mvc的javascript-Web富应用开发/">基于mvc的javascript Web富应用开发</a>
-          </li>
-        
-          <li>
-            <a href="/2015/03/22/jQuery插件编写/">jQuery插件编写</a>
           </li>
         
       </ul>
