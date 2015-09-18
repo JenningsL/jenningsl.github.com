@@ -17,7 +17,7 @@
 ＋ WeakSet结构与Set类似，也是不重复的值的集合。但是，它与Set有两个区别。
 首先，WeakSet的成员只能是对象，而不能是其他类型的值。
 其次，WeakSet中的对象都是弱引用，即垃圾回收机制不考虑WeakSet对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不">
-<meta property="og:updated_time" content="2015-07-25T01:24:53.000Z">
+<meta property="og:updated_time" content="2015-09-09T07:02:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="es6笔记">
 <meta name="twitter:description" content="＋ 尾部递归优化，只要在es6中使用尾部递归优化就不会发生调用栈溢出。
@@ -96,11 +96,31 @@
 <p>首先，WeakSet的成员只能是对象，而不能是其他类型的值。</p>
 <p>其次，WeakSet中的对象都是弱引用，即垃圾回收机制不考虑WeakSet对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不考虑该对象还存在于WeakSet之中。这个特点意味着，无法引用WeakSet的成员，因此WeakSet是不可遍历的。<br>WeakSet的一个用处，是储存DOM节点，而不用担心这些节点从文档移除时，会引发内存泄漏。</p>
 <p>＋ Map的键（是对象时）实际上是跟内存地址绑定的，只要内存地址不一样，就视为两个键。<br>如果Map的键是一个简单类型的值（数字、字符串、布尔值），则只要两个值严格相等，Map将其视为一个键，包括0和-0。另外，虽然NaN不严格相等于自身，但Map将其视为同一个键。</p>
+<ul>
+<li>Object.assign可以将源对象（source）的所有可枚举属性，复制到目标对象（target）。它至少需要两个对象作为参数，第一个参数是目标对象，后面的参数都是源对象。在克隆对象，合并对象，提供默认配置的情况都十分实用。例：Object.assign(target,source1,source2); </li>
+<li>一个数据结构只要部署了Symbol.iterator方法，就被视为具有iterator接口，就可以用for…of循环遍历它的成员。for…of循环可以使用的范围包括数组、Set和Map结构、某些类似数组的对象（比如arguments对象、DOM NodeList对象）、后文的Generator对象，以及字符串。for..in遍历键名，for..of遍历键值<br>＋ 并不是所有类似数组的对象都具有iterator接口，一个简便的解决方法，就是使用Array.from方法将其转为数组。<br>＋ 对于普通的对象，for…of结构不能直接使用，会报错，必须部署了iterator接口后才能使用。但是，这样情况下，for…in循环依然可以用来遍历键名。<br>一种解决方法是，使用Object.keys方法将对象的键名生成一个数组，然后遍历这个数组。<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (var <span class="variable">key</span> of <span class="keyword">Object</span>.keys(someObject)) &#123;</span><br><span class="line">    console.<span class="built_in">log</span>(<span class="variable">key</span> + <span class="string">": "</span> + someObject[<span class="variable">key</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>另一种方便的方法是将数组的Symbol.iterator属性，直接赋值给其他对象的Symbol.iterator属性<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jQuery.prototype[<span class="type">Symbol</span>.<span class="keyword">iterator</span>] =</span><br><span class="line"><span class="type">Array</span>.prototype[<span class="type">Symbol</span>.<span class="keyword">iterator</span>];</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>跟forEach相比，for..of可以与break、continue和return配合使用,而且能确保按顺序遍历，与for…in不同。for…in更适合于遍历对象的属性。</p>
+</li>
+<li><p>Class不存在变量提升（hoist），这一点与ES5完全不同。</p>
+</li>
+<li>es6使用extends关键字继承。<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ColorPoint</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Point</span> &#123;</span></span><br><span class="line"></span><br><span class="line">constructor(x, y, color) &#123;</span><br><span class="line"><span class="keyword">super</span>(x, y); <span class="comment">// 调用父类的constructor(x, y)</span></span><br><span class="line"><span class="keyword">this</span>.color = color;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">toString() &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">this</span>.color + ' ' + <span class="keyword">super</span>.toString(); <span class="comment">// 调用父类的toString()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象。子类中的super指向父类实例。<br>ES5的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6的继承机制完全不同，实质是先创造父类的实例对象this（所以必须先调用super方法），然后再用子类的构造函数修改this。<br>＋ 在ES6之前，js内置的构造函数是不能被继承的，也就是说你不能定义一个Array的子类。这是因为原生构造函数无法外部获取，因此在子类中利用apply或者将原生构造函数分配给子类的原型对象都不行。而ES6允许继承原生构造函数定义子类，因为ES6是先新建父类的实例对象this，然后再用子类的构造函数修饰this，使得父类的所有行为都可以继承。这意味着我们这么定义一个Array的子类等等。<br>＋ 类相当于实例的原型，所有在类中定义的方法，都会被实例继承。如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为“静态方法”。</p>
+<h2 id="Set,Map">Set,Map</h2><ul>
+<li>Set 与Array类似，但是每个值不能重复（===），而且没有map,filter等方法，但是有forEach方法。需要使用map等方式时可以先用…将Set转成Array 操作完之后再转回Set(构造函数中参数直接传数组)</li>
+<li>Map 与object类似，但是键可以为任意数据类型，即实现了 key - key 的映射关系。同样没有map,filter等方法</li>
+<li>WeakMap结构与Map结构基本类似，唯一的区别是它只接受对象作为键名（null除外），不接受原始类型的值作为键名，而且键名所指向的对象，不计入垃圾回收机制。WeakMap的设计目的在于，键名是对象的弱引用（垃圾回收机制不将该引用考虑在内），所以其所对应的对象可能会被自动回收。WeakMap应用的典型场合就是DOM节点作为键名</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="cidipqtx9000ogw2fqshpx7q8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="ciepgujm2000ov12f1vht6lk8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es6-笔记/">es6 笔记</a></li></ul>
