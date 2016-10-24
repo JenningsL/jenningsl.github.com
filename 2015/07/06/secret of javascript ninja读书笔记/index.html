@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="jenningL">
 <meta property="og:description" content="第四章－函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
 二、函数有一个鲜为人知的属性－">
-<meta property="og:updated_time" content="2015-07-26T02:16:18.000Z">
+<meta property="og:updated_time" content="2015-09-29T09:47:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="secret of javascript ninja读书笔记">
 <meta name="twitter:description" content="第四章－函数是一等对象一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：1.存储不重复的函数集合（常用于任务队列中）2.self-memoizing-function存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。
@@ -98,13 +98,18 @@
 <h2 id="第五章－闭包">第五章－闭包</h2><ul>
 <li>前面几部分关于闭包的内容都是很常见的，比如 创建私有变量，修改函数执行环境。。。</li>
 <li>闭包可以用来实现partial function(部分调用函数)和currying(函数柯里化)，两者的区别在于，partial可以任意安排预先提供的参数的位置，比如<br><code>fn.partial(a,undefined,b)</code><br>undefined的参数将在正式调用时提供.<br>而curry则只能预先提供前一个或几个参数</li>
-<li>立即执行函数可以用来防止全局变量被污染.</li>
+<li>立即执行函数可以用来防止全局变量被污染.<h2 id="第九章_runtime_code_evaluation">第九章 runtime code evaluation</h2>动态解析运行js代码有几种方法：</li>
+<li>eval()</li>
+<li>Function构造函数,接受的最后一个参数作为函数主体部分的代码,前面的参数作为函数的参数。e.g var a = new Function(‘a’,’b’,’return a+b’);</li>
+<li>插入script标签，令script.text = 代码;</li>
+<li>定时器</li>
 </ul>
+<p>由于js能够动态地解析运行代码，我们可以利用这个特性去实现一些高级用法，比如将其他语言转译成js再执行、动态重写或注入代码。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="ciepgujlu000kv12fka9vioqz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="cifxwqvu6000mli2fuu5uoyr2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -143,7 +148,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习笔记/">学习笔记</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -152,7 +157,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a> <a href="/tags/学习笔记/" style="font-size: 10px;">学习笔记</a>
     </div>
   </div>
 
@@ -161,7 +166,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
     </div>
   </div>
 
@@ -173,23 +178,23 @@
       <ul>
         
           <li>
+            <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/09/RNN教程,part2-实现一个RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/21/redux入门/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/10/15/编译原理/">编译原理</a>
+          </li>
+        
+          <li>
             <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/07/25/es6笔记/">es6笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
           </li>
         
       </ul>
@@ -204,7 +209,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Jennings<br>
+      &copy; 2016 Jennings<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

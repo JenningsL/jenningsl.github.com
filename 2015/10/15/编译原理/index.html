@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>编译原理 | jenningL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="什么是编译器编译器（compiler）就是一种程序，它可以读进一种语言编写的程序，然后翻译成另一种语言（目标语言）编写的程序。编译器也可以称为一种语言处理器。而解析器（interpreter）则是另外一种语言处理器，它不通过翻译方式生成目标语言，而是直接利用用户提供的输入执行源程序中特定的操作。编译器生成的目标程序通常比一个解析器执行的程序快，但是解析器的错误诊断效果比编译器好，因为它逐个语句执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理">
+<meta property="og:url" content="http://yoursite.com/2015/10/15/编译原理/index.html">
+<meta property="og:site_name" content="jenningL">
+<meta property="og:description" content="什么是编译器编译器（compiler）就是一种程序，它可以读进一种语言编写的程序，然后翻译成另一种语言（目标语言）编写的程序。编译器也可以称为一种语言处理器。而解析器（interpreter）则是另外一种语言处理器，它不通过翻译方式生成目标语言，而是直接利用用户提供的输入执行源程序中特定的操作。编译器生成的目标程序通常比一个解析器执行的程序快，但是解析器的错误诊断效果比编译器好，因为它逐个语句执行">
+<meta property="og:image" content="http://yoursite.com/../img/regExp2NFA.png">
+<meta property="og:image" content="http://yoursite.com/../img/rdAlgorithm.png">
+<meta property="og:image" content="http://yoursite.com/../img/leftRecursive.png">
+<meta property="og:updated_time" content="2015-10-22T02:58:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译原理">
+<meta name="twitter:description" content="什么是编译器编译器（compiler）就是一种程序，它可以读进一种语言编写的程序，然后翻译成另一种语言（目标语言）编写的程序。编译器也可以称为一种语言处理器。而解析器（interpreter）则是另外一种语言处理器，它不通过翻译方式生成目标语言，而是直接利用用户提供的输入执行源程序中特定的操作。编译器生成的目标程序通常比一个解析器执行的程序快，但是解析器的错误诊断效果比编译器好，因为它逐个语句执行">
+  
+    <link rel="alternative" href="/atom.xml" title="jenningL" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">jenningL</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-编译原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/15/编译原理/" class="article-date">
+  <time datetime="2015-10-15T02:53:24.000Z" itemprop="datePublished">2015-10-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      编译原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是编译器">什么是编译器</h2><p>编译器（compiler）就是一种程序，它可以读进一种语言编写的程序，然后翻译成另一种语言（目标语言）编写的程序。编译器也可以称为一种语言处理器。<br>而解析器（interpreter）则是另外一种语言处理器，它不通过翻译方式生成目标语言，而是直接利用用户提供的输入执行源程序中特定的操作。<br>编译器生成的目标程序通常比一个解析器执行的程序快，但是解析器的错误诊断效果比编译器好，因为它逐个语句执行源程序。</p>
+<h2 id="编译器的结构">编译器的结构</h2><p>字符流－》［词法分析器］－符号流－》［语法分析］－语法树－》［语义分析］－语法树－》中间代码生成器－中间表示形式－》［机器无关代码优化器］－中间表示形式－》代码生成器－目标机器语言－》［机器相关代码优化器］－》目标机器语言</p>
+<p>其中两个优化步骤是可选的</p>
+<p>－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－</p>
+<h2 id="词法分析器(Lexer)">词法分析器(Lexer)</h2><p>词法分析器的工作是将输入的字符串分割并识别为不同的token对，token对包括类别和值。如<identifier,"foo">。<br>一个词法分析器需要做两项工作：</identifier,"foo"></p>
+<ul>
+<li>分割字符串，识别出对应不同token的子字符串，亦即词汇(lexemes)</li>
+<li>对每个词进行分类<br>有时候为了正确分类，look ahead是必要的。</li>
+</ul>
+<p>formal language 是从一个alphabet里面取出任意字符组成的一个字符串集。</p>
+<p>在进行词法分析时</p>
+<ul>
+<li>在利用正则表达式来进行匹配时，通常是采取maximal munch 的策略，即读入尽可能长的输入进行匹配。match as long as possible.</li>
+<li>建立一个有限级列表，当存在多个匹配时选择有限度最高的那个。将无法匹配的情况作为有限度最低的一种情况。</li>
+</ul>
+<h3 id="Finite_Automata">Finite Automata</h3><ul>
+<li>Deterministic Finite Automata(DFA) 只能一次消耗一个（不能不消耗）字符然后进行转移，而且消耗的字符只有一种转移的选择。</li>
+<li>Nondeterministic Finite Automata(NFA) 可以消耗一个或不消耗字符然后进行转移，转移规则可以是一个字符对应多个转移。</li>
+</ul>
+<p>DFA容易实现，执行很快；NFA执行较慢，但是规模远远小于DFA,因此通常采用NFA来实现正则表达式匹配.</p>
+<p>正则表达式的实现：<br><img src="../img/regExp2NFA.png" alt="正则表达式的实现" title="正则表达式的实现"></p>
+<p>从NFA到DFA的关键在于合并epsilon-closure,然后找出每个epsilon-closure之间的转换规则。</p>
+<p>可以利用2维数组来实现DFA。</p>
+<h2 id="语法分析器(Parser)">语法分析器(Parser)</h2><p>语法分析器接受词法分析器得到的token字符串作为输入，得到一个语法树。</p>
+<p>文法：用于描述程序设计语言的构造的语法。一个上下文无关文法由终结符号、非终结符号、1个开始符号和一组产生式组成。</p>
+<p>推导：从开始符号出发，不断将非终结符号替换为它的某个产生式的体的过程。</p>
+<h3 id="自顶向下的语法分析">自顶向下的语法分析</h3><p>自顶向下的语法分析基本的方法是［递归下降语法分析］，这种方法可能需要回溯。<br><img src="../img/rdAlgorithm.png" alt="递归下降语法分析程序例子" title="递归下降语法分析程序例子"><br>如果一个文法中有一个非终结符号A使得某个串存在一个推导A =&gt; Aa,那么这个文法就是左递归的。如果文法存在左递归，则该算法会陷入无限循环调用（如下图），因此需要消除左递归。<br><img src="../img/leftRecursive.png" alt="左递归" title="左递归"></p>
+<p>对于称为LL(1)的文法，我们可以构造出预测分析器，即不需要回溯的递归下降语法分析器。</p>
+<h3 id="自底向上的语法分析">自底向上的语法分析</h3>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/10/15/编译原理/" data-id="cifxwqvtm0008li2feumou9om" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习笔记/">学习笔记</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/21/redux入门/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/08/19/垂直水平居中的方法/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">垂直水平居中的方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习笔记/">学习笔记</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a> <a href="/tags/学习笔记/" style="font-size: 10px;">学习笔记</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/09/RNN教程,part2-实现一个RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/21/redux入门/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/10/15/编译原理/">编译原理</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Jennings<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

@@ -17,7 +17,7 @@
 ＋ WeakSet结构与Set类似，也是不重复的值的集合。但是，它与Set有两个区别。
 首先，WeakSet的成员只能是对象，而不能是其他类型的值。
 其次，WeakSet中的对象都是弱引用，即垃圾回收机制不考虑WeakSet对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不">
-<meta property="og:updated_time" content="2015-09-09T07:02:09.000Z">
+<meta property="og:updated_time" content="2015-09-30T02:57:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="es6笔记">
 <meta name="twitter:description" content="＋ 尾部递归优化，只要在es6中使用尾部递归优化就不会发生调用栈溢出。
@@ -116,11 +116,17 @@
 <li>Map 与object类似，但是键可以为任意数据类型，即实现了 key - key 的映射关系。同样没有map,filter等方法</li>
 <li>WeakMap结构与Map结构基本类似，唯一的区别是它只接受对象作为键名（null除外），不接受原始类型的值作为键名，而且键名所指向的对象，不计入垃圾回收机制。WeakMap的设计目的在于，键名是对象的弱引用（垃圾回收机制不将该引用考虑在内），所以其所对应的对象可能会被自动回收。WeakMap应用的典型场合就是DOM节点作为键名</li>
 </ul>
+<h2 id="Promise">Promise</h2><ul>
+<li>如果Promise状态已经变成resolved，再抛出错误是无效的。</li>
+<li>Promise对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。</li>
+<li>跟传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。</li>
+<li>如果Promise.resolve方法的参数，不是具有then方法的对象（又称thenable对象），则返回一个新的Promise对象，且它的状态为Resolved,而且Promise.resolve方法的参数，会同时传给回调函数。如：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = <span class="built_in">Promise</span>.resolve(<span class="string">'Hello'</span>);</span><br><span class="line"></span><br><span class="line">p.then(<span class="function"><span class="keyword">function</span> (<span class="params">s</span>)</span>&#123;</span><br><span class="line"><span class="built_in">console</span>.log(s)</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// Hello</span></span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="ciepgujm2000ov12f1vht6lk8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="cifxwqvud000qli2fuks4a8o3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es6-笔记/">es6 笔记</a></li></ul>
@@ -161,7 +167,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习笔记/">学习笔记</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -170,7 +176,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a> <a href="/tags/学习笔记/" style="font-size: 10px;">学习笔记</a>
     </div>
   </div>
 
@@ -179,7 +185,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
     </div>
   </div>
 
@@ -191,23 +197,23 @@
       <ul>
         
           <li>
+            <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/09/RNN教程,part2-实现一个RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/21/redux入门/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/10/15/编译原理/">编译原理</a>
+          </li>
+        
+          <li>
             <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/07/25/es6笔记/">es6笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
           </li>
         
       </ul>
@@ -222,7 +228,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Jennings<br>
+      &copy; 2016 Jennings<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

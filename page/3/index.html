@@ -61,6 +61,199 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Jquery-实现全屏菜单动画" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/06/Jquery-实现全屏菜单动画/" class="article-date">
+  <time datetime="2015-03-06T13:35:01.000Z" itemprop="datePublished">2015-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/06/Jquery-实现全屏菜单动画/">Jquery 实现全屏菜单动画</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现这个动画遇到了几个问题<br>1.jquery的animate函数不支持非数字的css属性，而旋转动画需要使用 <code>transform:rotate(7deg)</code>这个css属性。<br>2.在做的过程中发现设置z-index无效，后来发现z-index会受到position的影响。<br>解决方法：</p>
+<h3 id="问题1：">问题1：</h3><p>在stackoverflow网上找到了这个问题的解决方法：<a href="http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。" target="_blank" rel="external">http://stackoverflow.com/questions/5462275/animate-element-transform-rotate。可以使用animate的step函数，配合一个不会影响到动画的属性textIndent实现旋转动画，这样就可以利用jquery的缓动函数了。具体用法参考：http://jsfiddle.net/ryleyb/ERRmd/和jquery官网关于animate函数的介绍。</a></p>
+<h3 id="问题2：">问题2：</h3><p>关于z-index对层级覆盖的影响</p>
+<ul>
+<li>z-index只对设置了relative,absolute或static的position属性的节点起作用。</li>
+<li>没有设置position属性的节点默认层次低于设置了该属性的节点。</li>
+<li>在文档后面的节点会覆盖前面的节点。</li>
+<li>从父规则：父节点的层次决定子节点的层次。<br>具体的文章参考：<a href="http://www.neoease.com/css-z-index-property-and-layering-tree/" target="_blank" rel="external">http://www.neoease.com/css-z-index-property-and-layering-tree/</a></li>
+</ul>
+<p>最终的实现效果在我的codePen上可以看到。<a href="http://codepen.io/JenningsL/pen/PwdNjr" target="_blank" rel="external">http://codepen.io/JenningsL/pen/PwdNjr</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/06/Jquery-实现全屏菜单动画/" data-id="cifxwqvuq0013li2fej6ohnsl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-高性能Javascript编程part3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/06/高性能Javascript编程part3/" class="article-date">
+  <time datetime="2015-03-06T09:28:56.000Z" itemprop="datePublished">2015-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/06/高性能Javascript编程part3/">高性能Javascript编程part3</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="响应接口">响应接口</h2><p>Javascript和用户界面在同一个进程内运行，同一时刻只有其中一个可以运行。这意味着当Javascript代码正在运行时，用户界面不能相应输入，反之亦然。有效地管理UI线程就是要确保Javascript不能连续运行太长时间，以免影响用户体验。</p>
+<ul>
+<li>运行时间不能超过100ms。过长的时间导致UI更新出现可察觉的延迟。</li>
+<li>定时器可用于安排代码推迟执行，它使得你可以将长运行脚本分解成一系列较小的任务。<br>其中，可以将数据分批处理，或者将任务分割成多个子函数。<br>一、代码分片<br>(一)数据分批处理时，是否可用定时器取代循环的两个取决因素：1.此处理过程是否一定要同步处理2.数据是否一定要按顺序处理。<br>使用方法如下：<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接收三个参数：待处理数组，对每个项调用的处理函数，处理结束时执行的回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">preocessArray</span><span class="params">(items,process,callback)</span>&#123;</span></span><br><span class="line">	var todo=items.<span class="built_in">concat</span><span class="params">()</span>;</span><br><span class="line">	setTimeout<span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">	process<span class="params">(todo.shift<span class="params">()</span>)</span>;</span><br><span class="line">	if<span class="params">(todo.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">        setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        callback<span class="params">(items)</span>;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;,<span class="number">25</span>)</span>;<span class="comment">//这里选择25是考虑到浏览器的定时精度大概为15ms，因此不能小于15</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>但是上面的代码有时存在这样的问题，如果每次process函数只耗时1ms，每25ms调用一次，那么整个数组处理时间将大大增加。因此应该增加每次的调用次数。可以使用限时运行代码技术：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//processArray()方法通过一个时间检测机制，可在每个定时器中执行多次处理，限制每次处理时间最少为50ms</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timedProcessArray</span><span class="params">(items,process,callback)</span>&#123;</span></span><br><span class="line">	var todo=items.<span class="built_in">concat</span><span class="params">()</span>;</span><br><span class="line">	setTimeout<span class="params">(function<span class="params">(</span><br><span class="line">	  var start=+new Date<span class="params">()</span>;//+号将Date对象转化为一个数字</span><br><span class="line">	  do&#123;</span><br><span class="line">         process<span class="params">(todo.shift<span class="params">()</span>)</span>;</span><br><span class="line">	  &#125;while<span class="params">(todo.length&gt;<span class="number">0</span>&amp;&amp;<span class="params">(+new Date<span class="params">()</span>-start&lt;<span class="number">50</span>)</span>)</span>;//在每次执行时间未到之前循环调用执行处理</span><br><span class="line">	  if<span class="params">(todo.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">       setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">	  &#125;else&#123;</span><br><span class="line">       callback<span class="params">(items)</span>;</span><br><span class="line">	  &#125;</span><br><span class="line">	)</span>,<span class="number">25</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(二)分解任务<br>将每个子任务（函数）放入一个数组：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multistep</span><span class="params">(steps,args,callback)</span>&#123;</span></span><br><span class="line">	var tasks=steps.<span class="built_in">concat</span><span class="params">()</span>;<span class="comment">//clone the array</span></span><br><span class="line">	setTimeout<span class="params">(function<span class="params">()</span>&#123;</span><br><span class="line">      var task=tasks.shift<span class="params">()</span>;</span><br><span class="line">      task<span class="params">(args||[])</span>;</span><br><span class="line">      if<span class="params">(tasks.length&gt;<span class="number">0</span>)</span>&#123;</span><br><span class="line">        setTimeout<span class="params">(arguments.callee,<span class="number">25</span>)</span>;</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        callback<span class="params">()</span>;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;,<span class="number">25</span>)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>二、Web Workers网页工人线程<br>自JavaScript 诞生以来，还没有办法在浏览器 UI线程之外运行代码。网页工人线程API 改变了这种状<br>况，它引入一个接口，使代码运行而不占用浏览器UI线程的时间。作为最初的HTML 5 的一部分，网页<br>工人线程API 已经分离出去成为独立的规范（<a href="http://www.w3.org/TR/workers/" target="_blank" rel="external">http://www.w3.org/TR/workers/</a> ）。</p>
+<p>网页工人线程对网页应用来说是一个潜在的巨大性能提升，因为新的工人线程在自己的线程中运行<br>JavaScript。这意味着，工人线程中的代码运行不仅不会影响浏览器 UI，而且也不会影响其它工人线程中<br>运行的代码。<br>由于网页工人线程不绑定 UI线程，这也意味着它们将不能访问许多浏览器资源。工人线程的运行环境由下列部分组成：<br>一个浏览器对象，只包含四个属性：appName, appVersion, userAgent, 和platform<br>一个location 对象（和window里的一样，只是所有属性都是只读的）<br>一个self 对象指向全局工人线程对象<br>一个importScripts()方法，使工人线程可以加载外部JavaScript 文件<br>所有ECMAScript对象，诸如 Object，Array，Data ，等等<br>XMLHttpRequest 构造器<br>setTimeout() 和setInterval() 方法<br>close() 方法可立即停止工人线程 </p>
+<p>因为网页工人线程有不同的全局运行环境，你不能在 JavaScript 代码中创建。事实上，你需要创建一个<br>完全独立的JavaScript 文件，包含那些在工人线程中运行的代码。要创建网页工人线程，你必须传入这个<br>JavaScript 文件的 URL ： </p>
+<p><code>var worker = new Worker(&quot;code.js&quot;);</code><br> 此代码一旦执行，将为指定文件创建一个新线程和一个新的工人线程运行环境。此文件被异步下载，直</p>
+<p>到下载并运行完之后才启动工人线程。<br>工人线程和网页代码通过postMessage和onmessage事件接口进行交互。例如：</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var worker = new Worker<span class="params">(<span class="string">"code.js"</span>)</span>;   </span><br><span class="line">worker.onmessage = <span class="function"><span class="keyword">function</span><span class="params">(event)</span>&#123;</span>   </span><br><span class="line">   alert<span class="params">(event.data)</span>;   </span><br><span class="line">&#125;;   </span><br><span class="line">worker.postMessage<span class="params">(<span class="string">"Nicholas"</span>)</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//<span class="keyword">inside</span> code.js   </span><br><span class="line">lf.onmessage = function(event)&#123;   </span><br><span class="line"> self.postMessage(<span class="string">"Hello, "</span> + event.data + <span class="string">"!"</span>);   </span><br><span class="line">```    </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">当工人线程通过 importScripts()方法加载外部 JavaScript 文件，它接收一个或多个 URL 参数，指出要加</span><br><span class="line">的JavaScript 文件网址。工人线程以阻塞方式调用 importScripts()，直到所有文件加载完成并执行之后，</span><br><span class="line">本才继续运行。由于工人线程在UI线程之外运行，这种阻塞不会影响UI响应。例如：</span><br></pre></td></tr></table></figure>
+<p>//inside code.js<br>importScripts(“file1.js”, “file2.js”);<br>self.onmessage = function(event){<br>   self.postMessage(“Hello, “ + event.data + “!”);<br>};<br>```</p>
+<p>网页工人线程适合于那些纯数据的，或者与浏览器 UI没关系的长运行脚本。例如：<br>解析一个大字符串<br>编/解码一个大字符串<br>复杂数字运算<br>给一个大数组排序<br>……</p>
+<p>任何超过 100 毫秒的处理，都应当考虑工人线程方案是不是比基于定时器的方案更合适。当然，还要基<br>于浏览器是否支持工人线程。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/06/高性能Javascript编程part3/" data-id="cifxwqvth0005li2fn3xpznwi" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-常见排序算法Javascript实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/05/常见排序算法Javascript实现/" class="article-date">
+  <time datetime="2015-03-05T13:19:29.000Z" itemprop="datePublished">2015-03-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/05/常见排序算法Javascript实现/">常见排序算法Javascript实现</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>常见的排序算法有冒泡排序、选择排序、插入排序、希尔排序、归并排序、快速排序等。</p>
+<h3 id="冒泡排序">冒泡排序</h3><p>冒泡排序是最简单的排序算法之一，但是性能很差，总的平均时间复杂度为O(n^2),在数据量很小的时候可以使用。算法的基本思想是:<br>1.设数组有N个元素。从i=0开始,比较a[i]和a[i+1]的大小，如果a[i]&gt;a[i+1]，则交换这两个数的位置。直到i=N。<br>2.重复步骤1，不过这次执行到i=N-1<br>3.重复步骤1，不过这次执行到i=N-2<br>…<br>4.直到N=0则排序完成</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//冒泡法排序，增序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span><span class="params">(array,dir)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> len=<span class="keyword">array</span>.length,</span><br><span class="line">	    i,j;<span class="comment">//i相当于内循环结束的索引值,每次外循环-1</span></span><br><span class="line">	<span class="keyword">for</span>(i=len-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;=i;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(<span class="keyword">array</span>[j]&gt;<span class="keyword">array</span>[j+<span class="number">1</span>])</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="keyword">var</span> temp=<span class="keyword">array</span>[j];</span><br><span class="line">					<span class="keyword">array</span>[j]=<span class="keyword">array</span>[j+<span class="number">1</span>];</span><br><span class="line">					<span class="keyword">array</span>[j+<span class="number">1</span>]=temp;</span><br><span class="line">				&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">array</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="选择排序">选择排序</h3><p>从数组的开头开始，将第一个元素和其他元素进行比较。检查完所有元素后，最小的元素会被放到数组的第一个位置，然后算法会从第二个位置继续。这个过程一直进行，当进行到数组的倒数第二个位置时，所有的数据便完成了排序。每次循环最多只有一次交换。<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">selectionSort</span><span class="params">(arr)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> minIndex,temp;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;len-<span class="number">1</span>;i++)&#123;</span><br><span class="line">		minIndex=i;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> j=i+<span class="number">1</span>;j&lt;len;j++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(arr[j]&lt;arr[minIndex]) minIndex=j;</span><br><span class="line">		&#125;</span><br><span class="line">		temp=arr[i];</span><br><span class="line">		arr[i]=arr[minIndex];</span><br><span class="line">		arr[minIndex]=temp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="快速排序">快速排序</h3><p>快速排序是一种效率较高的算法，平均时间复杂度为O(nlogn)。基本思想是：在待排序的数组中找一个基准，然后从数组里面提取出来。遍历数组，将小于这个基准的数放置在它的左边，将大于这个基准的数放在它的右边。对得到的左右子数组递归执行以上步骤直到数组长度小于等于1.<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//快速排序</span></span><br><span class="line">function <span class="built_in">quickSort</span>(arr)&#123;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">if</span>(len&lt;=<span class="number">1</span>) <span class="keyword">return</span> arr;</span><br><span class="line">	<span class="keyword">var</span> pivotIndex=<span class="type">Math</span>.floor(len/<span class="number">2</span>);</span><br><span class="line">	<span class="keyword">var</span> pivot=arr.splice(pivotIndex,<span class="number">1</span>)[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">var</span> <span class="keyword">left</span>=[];</span><br><span class="line">	<span class="keyword">var</span> <span class="keyword">right</span>=[];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;len-<span class="number">1</span>;i++)&#123;<span class="comment">//len-1是因为基准元素被取出</span></span><br><span class="line">		<span class="keyword">if</span>(arr[i]&lt;pivot) <span class="keyword">left</span>.push(arr[i]);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">right</span>.push(arr[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">quickSort</span>(<span class="keyword">left</span>).concat([pivot],<span class="built_in">quickSort</span>(<span class="keyword">right</span>));<span class="comment">//递归调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="插入排序">插入排序</h3><p>插入排序，平均时间复杂度O(n^2)。基本思想是：将数组划分为两个部分，一部分是已经排序好的。剩下的部分是未排序的，每次从未排序的部分拿出一个数插入到已排序部分中而不能打乱已排好的顺序。直到整个数组都排好顺序。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//插入排序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> outer=<span class="number">1</span>;outer&lt;len;outer++)&#123;</span><br><span class="line">		<span class="keyword">var</span> inner=outer;</span><br><span class="line">		<span class="keyword">var</span> temp=arr[outer];<span class="comment">//即将插入的数</span></span><br><span class="line">		<span class="keyword">while</span>(inner&gt;<span class="number">0</span>&amp;&amp;arr[inner-<span class="number">1</span>]&gt;temp)&#123;</span><br><span class="line">			arr[inner]=arr[inner-<span class="number">1</span>];</span><br><span class="line">			inner--;</span><br><span class="line">		&#125;<span class="comment">//为即将插入的数腾出位置</span></span><br><span class="line">		arr[inner]=temp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(insertSort([<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">2</span>]));</span><br></pre></td></tr></table></figure></p>
+<h3 id="希尔排序">希尔排序</h3><p>希尔排序是插入排序的改进版，它根据一定间隔将原数组提取出多个等间隔的子数组，然后对这些子数据进行插入排序。直至间隔为1时，实际上就是对整个数组进行插入排序，由于插入排序在基本有序的情况下是很快的，所以性能能够得到改善。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shellSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> len=arr.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> gap=<span class="built_in">Math</span>.floor(len/<span class="number">2</span>);gap&gt;=<span class="number">1</span>;gap=<span class="built_in">Math</span>.floor(gap/<span class="number">2</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> i=gap;i&lt;len;i++)&#123;</span><br><span class="line">			<span class="keyword">var</span> temp=arr[i];</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">var</span> j=i;j&gt;=gap&amp;&amp;arr[j-gap]&gt;temp;j-=gap)&#123;</span><br><span class="line">				arr[j]=arr[j-gap];</span><br><span class="line">			&#125;</span><br><span class="line">			arr[j]=temp;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(shellSort([<span class="number">6</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">5</span>,<span class="number">4</span>]));</span><br></pre></td></tr></table></figure></p>
+<h3 id="归并排序">归并排序</h3><p>归并排序在数据量很大时性能较好，最好、最坏和平均时间复杂度都是O(nlogn)。基本思想是将数组每次分成两半，一直到每个数组的长度为1则开始合并。合并的法则是：比较左半子数组和右半子数组的第一个数，取出小的那个加入到合并所得的数组中。最后将剩下的元素加在合并所得数组末尾。一直合并到整个数组被排好序。<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//归并排序</span><br><span class="line">function merge(left,right)&#123;</span><br><span class="line">	<span class="keyword">var</span> <span class="literal">result</span>=[];</span><br><span class="line">	<span class="keyword">while</span>(left.length&gt;<span class="number">0</span>&amp;&amp;right.length&gt;<span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">if</span>(left[<span class="number">0</span>]&lt;right[<span class="number">0</span>])&#123;</span><br><span class="line">			<span class="literal">result</span>.push(left.shift());</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="literal">result</span>.push(right.shift());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">result</span>.concat(left).concat(right);</span><br><span class="line">&#125;</span><br><span class="line">function mergeSort(items)&#123;</span><br><span class="line">    <span class="keyword">if</span>(items.length==<span class="number">1</span>)&#123;</span><br><span class="line">    	<span class="keyword">return</span> items;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> middle=<span class="type">Math</span>.floor(items.length/<span class="number">2</span>);</span><br><span class="line">    <span class="keyword">var</span> left=items.slice(<span class="number">0</span>,middle);</span><br><span class="line">    <span class="keyword">var</span> right=items.slice(middle);</span><br><span class="line">    <span class="keyword">return</span> merge(mergeSort(left),mergeSort(right));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="堆排序">堆排序</h3><p>参考<a href="http://blog.csdn.net/han_xiaoyang/article/details/12163251" target="_blank" rel="external">http://blog.csdn.net/han_xiaoyang/article/details/12163251</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HeapAdjust</span><span class="params">(arr,parent,len)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> minIndex=<span class="keyword">parent</span>;</span><br><span class="line">	<span class="keyword">var</span> temp;</span><br><span class="line">	<span class="keyword">var</span> leftChild=<span class="keyword">parent</span>*<span class="number">2</span>+<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">var</span> rightChild=<span class="keyword">parent</span>*<span class="number">2</span>+<span class="number">2</span>;</span><br><span class="line">	<span class="keyword">var</span> min=arr[<span class="keyword">parent</span>];</span><br><span class="line">	<span class="keyword">if</span>(leftChild&lt;len&amp;&amp;arr[leftChild]&lt;min)</span><br><span class="line">	&#123;</span><br><span class="line">		minIndex=leftChild;</span><br><span class="line">		min=arr[leftChild];</span><br><span class="line">	&#125;<span class="keyword">if</span>(rightChild&lt;len&amp;&amp;arr[rightChild]&lt;min)</span><br><span class="line">	&#123;</span><br><span class="line">		minIndex=rightChild;</span><br><span class="line">		min=arr[rightChild];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(minIndex!=<span class="keyword">parent</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		temp=arr[<span class="keyword">parent</span>];</span><br><span class="line">		arr[<span class="keyword">parent</span>]=arr[minIndex];</span><br><span class="line">		arr[minIndex]=temp;</span><br><span class="line">		HeapAdjust(arr,minIndex,len);<span class="comment">//递归</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">BuildHeap</span><span class="params">(arr)</span></span>&#123;</span><br><span class="line">	len=arr.length;</span><br><span class="line">	<span class="comment">//console.log("before:"+arr);</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i=Math.floor(len/<span class="number">2</span>)-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">		HeapAdjust(arr,i,len);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//console.log("after:"+arr);</span></span><br><span class="line">	<span class="comment">//return arr;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HeapSort</span><span class="params">(arr)</span></span>&#123;</span><br><span class="line">	BuildHeap(arr);</span><br><span class="line">	<span class="keyword">var</span> temp;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=arr.length-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">    	temp=arr[i];</span><br><span class="line">    	arr[i]=arr[<span class="number">0</span>];</span><br><span class="line">    	arr[<span class="number">0</span>]=temp;</span><br><span class="line">    	HeapAdjust(arr,<span class="number">0</span>,i);</span><br><span class="line">    	<span class="comment">//console.log(arr);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/05/常见排序算法Javascript实现/" data-id="ciunpokv4000021plokp4fhtu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-正则表达式总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/04/正则表达式总结/" class="article-date">
+  <time datetime="2015-03-04T13:32:47.000Z" itemprop="datePublished">2015-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/04/正则表达式总结/">Javascript中正则表达式的总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>定义正则表达式的方法</strong></p>
+<p>定义正则表达式的方法有两种：构造函数定义和正则表达式直接量定义。例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg1 = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'\d&#123;5, 11&#125;'</span>); <span class="comment">// 通过构造函数定义</span></span><br><span class="line"><span class="keyword">var</span> reg2 = <span class="regexp">/\d&#123;5, 12&#125;/</span>; <span class="comment">// 通过直接量定义</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式直接量字符</strong><br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="command">\o</span>：NUL字符（<span class="command">\u</span>0000）</span><br><span class="line"><span class="command">\t</span>：制表符（<span class="command">\u</span>0009）</span><br><span class="line"><span class="command">\n</span>：换行符（<span class="command">\u</span>000A）</span><br><span class="line"><span class="command">\v</span>：垂直制表符（<span class="command">\u</span>000B）</span><br><span class="line"><span class="command">\f</span>：换页符（<span class="command">\u</span>000C）</span><br><span class="line"><span class="command">\r</span>：回车符（<span class="command">\u</span>000D）</span><br><span class="line"><span class="command">\xnn</span>：由十六进制数nn指定的拉丁字符，例如，<span class="command">\x</span>0A等价于<span class="command">\n</span></span><br><span class="line"><span class="command">\uxxxx</span>：由十六进制数xxxx指定的Unicode字符，例如<span class="command">\u</span>0009等价于<span class="command">\t</span></span><br><span class="line"><span class="command">\cX</span>：控制字符^X，例如，<span class="command">\cJ</span>等价于换行符<span class="command">\n</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式锚字符</strong><br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">^：匹配字符串的开头，在多行检索中，匹配一行的开头</span><br><span class="line"><span class="formula">$：匹配字符串的结尾，在多行检索中，匹配一行的结尾</span><br><span class="line"><span class="command">\b</span>：匹配一个单词的边界，简言之，就是位于字符<span class="command">\w</span>和<span class="command">\W</span>之间的位置，或位于字符<span class="command">\w</span>和字符串的开头或者结尾之间的位置（<span class="special">[</span><span class="command">\b</span><span class="special">]</span>匹配的是退格符）</span><br><span class="line"><span class="command">\B</span>：匹配非单词边界的位置</span><br><span class="line">(?=p)：零宽正向先行断言，要求接下来的字符都与p匹配，但不能包括匹配p的那些字符</span><br><span class="line">(？!p)：零宽负向先行断言，要求接下来的字符串不与p匹配</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式的字符类</strong><br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="special">[</span>...<span class="special">]</span>：方括号内的任意字符</span><br><span class="line"><span class="special">[</span>^...<span class="special">]</span>：不在方括号内的任意字符</span><br><span class="line">.：除换行符和其他Unicode行终止符之外的任意字符</span><br><span class="line"><span class="command">\w</span>：任何ASCII字符组成的单词，等价于<span class="special">[</span>a-zA-Z0-9<span class="special">]</span></span><br><span class="line"><span class="command">\W</span>：任何不是ASCII字符组成的单词，等价于<span class="special">[</span>^a-zA-Z0-9<span class="special">]</span></span><br><span class="line"><span class="command">\s</span>：任何Unicode空白符</span><br><span class="line"><span class="command">\S</span>：任何非Unicode空白符的字符，注意<span class="command">\w</span>和<span class="command">\S</span>不同</span><br><span class="line"><span class="command">\d</span>：任何ASCII数字，等价于<span class="special">[</span>0-9<span class="special">]</span></span><br><span class="line"><span class="command">\D</span>：除了ASCII数字之外的任何字符，等价于<span class="special">[</span>^0-9<span class="special">]</span></span><br><span class="line"><span class="special">[</span><span class="command">\b</span><span class="special">]</span>：退格直接量（特例）</span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式的重复字符语法</strong><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="keyword">n</span>, <span class="keyword">m</span>&#125;：匹配前一项至少<span class="keyword">n</span>次，但不能超过<span class="keyword">m</span>次</span><br><span class="line">&#123;<span class="keyword">n</span>, &#125;：匹配前一项<span class="keyword">n</span>次或者更多次</span><br><span class="line">&#123;<span class="keyword">n</span>&#125;：匹配前一项<span class="keyword">n</span>次</span><br><span class="line">?：匹配前一项0次或者1次，也就是说前一项是可选的，等价于&#123;0, 1&#125;</span><br><span class="line">+：匹配前一项1次或多次，等价于&#123;1, &#125;</span><br><span class="line"><span class="comment">*：匹配前一项0次或多次，等价于&#123;0, &#125;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式的选择、分组和引用字符</strong><br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">|：选择，匹配的是该符号左边的子表达式或右边的子表达式</span></span><br><span class="line">(…)：组合，将几个项组合为一个单元，这个单元可通过“*”、“+”、“?”和“<span class="string">|”等符号加以修饰，而且可以记住和这个组相匹配的字符串以供此后的任何使用</span></span><br><span class="line">(?: …)：只组合，把项组合到一个单元，但是不记忆与改组相匹配的字符</span><br><span class="line">\n：和第n个分组第一次匹配的字符相匹配，组是圆括号中的子表达式（也有可能是嵌套的），组索引是从左到右的左括号数，“(?:”形式的分组不编码</span><br></pre></td></tr></table></figure></p>
+<p><strong>正则表达式修饰符</strong><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">i：执行不区分大小写的匹配</span><br><span class="line"><span class="keyword">g</span>：执行一个全局匹配，简言之，即找到所有的匹配，而不是在找到第一个之后就停止</span><br><span class="line"><span class="keyword">m</span>：多行匹配模式，^匹配一行的开头和字符串的开头，$匹配行的结尾和字符串的结尾</span><br></pre></td></tr></table></figure></p>
+<p><strong>用于模式匹配的String方法</strong><br>search()：它的参数是一个正则表达式，返回第一个与之匹配的子串的起始位置，如果没有匹配的子串就返回-1。如果search()的参数不是正则表达式，则首先会通过RegExp构造函数将它转换为正则表达式，search()不支持全局检索，因为它忽略修饰符g。如：<br><code>var s = &quot;JavaScript&quot;.search(/script/i); // s = 4</code><br>replace()：它用来执行检索与替换。接收两个参数，第一个是正则表达式，第二个是要进行替换的字符串。正则表达式如果设置的修饰符g，则进行全局替换，否则只替换匹配的第一个子串。如果第一个参数不是正则表达式，则直接搜索该字符串，而不是将其转换为正则表达式。如：<br><code>var s = &quot;JavaScript&quot;.replace(/java/gi, &quot;Script&quot;); // s =  Script Script</code><br>match()：它的参数是一个正则表达式，如果不是则通过RegExp转换，返回的是一个由匹配结果组成的数组。如果设置了修饰符g则进行全局匹配。如：<br><code>var d = &#39;55 ff 33 hh 77 tt&#39;.match(/\d+/g); // d = [&quot;55&quot;, &quot;33&quot;, &quot;77&quot;]</code><br>split()：这个方法用以将调用它的字符串拆分为一个子串组成的数组，使用的分隔符是split()的参数，它的参数也可以使一个正则表达式。如：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span> d = <span class="string">'123,31,453,645'</span>.split(<span class="string">','</span>); <span class="regexp">//</span> d = [<span class="string">"123"</span>, <span class="string">"31"</span>, <span class="string">"453"</span>, <span class="string">"645"</span>]</span><br><span class="line"><span class="reserved">var</span> d = <span class="string">'21 , 123,  44,  64,  67,  3'</span>.split(<span class="regexp">/\s*,\s*/</span>); <span class="regexp">//</span> d = [<span class="string">"21"</span>, <span class="string">"123"</span>, <span class="string">"44"</span>, <span class="string">"64"</span>, <span class="string">"67"</span>, <span class="string">"3"</span>]</span><br></pre></td></tr></table></figure></p>
+<p><strong>RegExp对象</strong><br>每个RegExp对象都有5个属性。属性source是一个只读字符串，包含正则表达式的文本。属性global是一个只读布尔值，用以说明这个正则表达式是否带有修饰符g。属性ignoreCase是一个只读布尔值，用以说明这个正则表达式是否带有修饰符i。属性multiline是一个只读布尔值，用以说明这个正则表达式是否带有修饰符m。属性lastIndex是一个可读可写的整数，如果匹配模式带有g修饰符，这个属性存储整个字符串中下一次检索的开始位置。<br>RegExp对象有两个方法。exec()的参数是一个字符串，它的功能与match()相似，exec()方法对一个指定的字符串执行一个正则表达式，也就是在一个字符串中执行匹配检索。如果没有找到任何匹配就返回null，找到了匹配就返回一个数组，这个数组的第一个元素包含的是与正则表达式相匹配的字符串，余下的元素是与圆括号内的子表达式相匹配的子串，不论正则表达式是否有修饰符g，都会返回一样的数组。当调用exec()的正则表达式对象具有修饰符g时，它将把当前正则表达式对象的lastIndex属性设置为紧挨着匹配子串的字符位置。当同一个正则表达式第二次调用exec()时，它将从lastIndex属性所指示的字符串处开始检索，如果exec()没有发现任何匹配结果，它会将lastIndex重置为0。如：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span> p = <span class="regexp">/Java/g</span>;</span><br><span class="line"><span class="reserved">var</span> text = <span class="string">"JavaScript is more fun than Java!"</span></span><br><span class="line"><span class="reserved">var</span> r;</span><br><span class="line"><span class="keyword">while</span>((r = p.exec(text)) != <span class="literal">null</span>) &#123;</span><br><span class="line">       <span class="built_in">console</span>.log(r, <span class="string">'lastIndex: '</span> + p.lastIndex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外一个方法是test()，它的参数是一个字符串，用test()对某个字符串进行检查，如果包含正则表达式的一个匹配结果，则返回true否则返回false。如：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="reserved">var</span> p = <span class="regexp">/java/i</span>;</span><br><span class="line">p.test(<span class="string">'javascript'</span>); <span class="regexp">//</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p>原文链接：JavaScript中的正则表达式总结 版权所有，转载时请注明出处，违者必究。<br>注明出处格式：前端开发博客 (<a href="http://caibaojian.com/javascript-zhengze.html" target="_blank" rel="external">http://caibaojian.com/javascript-zhengze.html</a>)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/03/04/正则表达式总结/" data-id="cifxwqvto000bli2f0ficwsfi" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-高性能Javascript" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/03/04/高性能Javascript/" class="article-date">
@@ -104,7 +297,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/04/高性能Javascript/" data-id="ciepgujla0006v12f5qaftfyf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/04/高性能Javascript/" data-id="cifxwqvti0006li2ft038kj19" class="article-share-link">Share</a>
       
       
     </footer>
@@ -167,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/03/高效率javascript编程/" data-id="ciepgujkx0001v12f1o06pg5v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/03/高效率javascript编程/" data-id="cifxwqvtb0001li2fhjrh2npt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript-效率/">javascript 效率</a></li></ul>
@@ -216,7 +409,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/03/MarkDown一些语法/" data-id="ciepgujmc000yv12fs9x4k1ic" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/03/MarkDown一些语法/" data-id="cifxwqvup0010li2fjm6mhkmv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a></li></ul>
@@ -256,7 +449,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/02/javascript闭包的理解/" data-id="ciepgujly000mv12fdkg581uz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/02/javascript闭包的理解/" data-id="cifxwqvua000oli2ffervuyv9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -293,7 +486,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/03/02/成功配置hexo/" data-id="ciepgujlh000av12fl4ejtepy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/03/02/成功配置hexo/" data-id="cifxwqvtt000dli2f3kcgrhs6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +511,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MarkDown-语法/">MarkDown 语法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React-todoList/">React todoList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/es6-笔记/">es6 笔记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript-效率/">javascript 效率</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mvc-javascript/">mvc javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs-express-mongodb-入门/">nodejs express mongodb 入门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/学习笔记/">学习笔记</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -327,7 +520,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a>
+      <a href="/tags/MarkDown-语法/" style="font-size: 10px;">MarkDown 语法</a> <a href="/tags/React-todoList/" style="font-size: 10px;">React todoList</a> <a href="/tags/css-三栏布局-自适应/" style="font-size: 10px;">css 三栏布局 自适应</a> <a href="/tags/es6-笔记/" style="font-size: 10px;">es6 笔记</a> <a href="/tags/javascript-效率/" style="font-size: 10px;">javascript 效率</a> <a href="/tags/mvc-javascript/" style="font-size: 10px;">mvc javascript</a> <a href="/tags/nodejs-express-mongodb-入门/" style="font-size: 10px;">nodejs express mongodb 入门</a> <a href="/tags/学习笔记/" style="font-size: 10px;">学习笔记</a>
     </div>
   </div>
 
@@ -336,7 +529,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
     </div>
   </div>
 
@@ -348,23 +541,23 @@
       <ul>
         
           <li>
+            <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/09/RNN教程,part2-实现一个RNN/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/21/redux入门/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/10/15/编译原理/">编译原理</a>
+          </li>
+        
+          <li>
             <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/18/三栏自适应布局/">三栏自适应布局</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/05/material-ui使用笔记/">material-ui使用笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/07/25/es6笔记/">es6笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
           </li>
         
       </ul>
@@ -379,7 +572,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Jennings<br>
+      &copy; 2016 Jennings<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
