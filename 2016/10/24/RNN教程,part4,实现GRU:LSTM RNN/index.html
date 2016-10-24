@@ -19,11 +19,11 @@
 这些等式看起很复杂，但实际上没那么难。首先，注意到LSTM层只是计算隐藏状态的另一种方法。在之前，我们计算隐藏层的公式是：
 
 这个单元">
-<meta property="og:image" content="http://yoursite.com/../imgs/rnn10.png">
-<meta property="og:image" content="http://yoursite.com/../imgs/rnn11.png">
-<meta property="og:image" content="http://yoursite.com/../imgs/rnn12.png">
-<meta property="og:image" content="http://yoursite.com/../imgs/rnn13.png">
-<meta property="og:updated_time" content="2016-10-24T06:54:06.000Z">
+<meta property="og:image" content="http://yoursite.com/../img/rnn10.png">
+<meta property="og:image" content="http://yoursite.com/../img/rnn11.png">
+<meta property="og:image" content="http://yoursite.com/../img/rnn12.png">
+<meta property="og:image" content="http://yoursite.com/../img/rnn13.png">
+<meta property="og:updated_time" content="2016-10-24T07:02:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jenningL">
 <meta name="twitter:description" content="LSTM 网络在part3中，我们看到了“消失的梯度”问题是如何给标准的RNN学习长距离依赖时造成困难的。LSTM是专门设计来解决“消失的梯度”问题，其中使用了一个阈值的机制。为了更好地理解，让我们来看看LSTM是如何计算隐藏状态st的（我使用了o来代表点乘）：
@@ -79,7 +79,7 @@
         <section id="main"><article id="post-RNN教程,part4,实现GRU:LSTM RNN" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" class="article-date">
-  <time datetime="2016-10-24T06:54:06.000Z" itemprop="datePublished">2016-10-24</time>
+  <time datetime="2016-10-24T07:02:10.000Z" itemprop="datePublished">2016-10-24</time>
 </a>
     
   </div>
@@ -89,11 +89,11 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="LSTM_网络">LSTM 网络</h2><p>在part3中，我们看到了“消失的梯度”问题是如何给标准的RNN学习长距离依赖时造成困难的。LSTM是专门设计来解决“消失的梯度”问题，其中使用了一个阈值的机制。为了更好地理解，让我们来看看LSTM是如何计算隐藏状态st的（我使用了o来代表点乘）：</p>
-<p><img src="../imgs/rnn10.png" alt=""></p>
+<p><img src="../img/rnn10.png" alt=""></p>
 <p>这些等式看起很复杂，但实际上没那么难。首先，注意到LSTM层只是计算隐藏状态的另一种方法。在之前，我们计算隐藏层的公式是：</p>
-<p><img src="../imgs/rnn11.png" alt=""></p>
+<p><img src="../img/rnn11.png" alt=""></p>
 <p>这个单元的输入是xt（当前时间步t的输入），和st-1（之前的隐藏状态）。输出是一个新的隐藏状态st。一个LSTM单元做的是完全相同的事情，只是用不同的方法。这是从宏观上来理解的关键。你可以从根本上将LSTM和GRU看作是一个黑盒子。给定当前的输入和之前的隐藏状态，它们通过某种方法计算下一个隐藏状态。</p>
-<p><img src="../imgs/rnn12.png" alt=""></p>
+<p><img src="../img/rnn12.png" alt=""></p>
 <p>带着这个想法，让我们尝试去直观地感受LSTM是如何计算隐藏状态的。Chris Olah有<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">一篇很好的教程</a>，在这里就不在赘述了。我强烈推荐你去看一下这边细节的教程。但总结如下：</p>
 <ul>
 <li>i,f,o分别被称为input gates,forget gates和output gates。注意到它们的计算公式是一样的，只是参数矩阵不同。它们被称为gates是因为sigmoid函数将这些向量的值限制在0～1之间，然后通过将他们和其他向量点乘，你定义了你想让其他向量“通过多少（let through）”。input gate 定义了让多少 根据当前输入新计算的状态 通过。forget gate定义了让多少之前的状态通过。最后，output gate 定义了你想要暴露多少内部状态给外部网络（更高的层和下一个时间步）。所有的gates 都有同样的维度ds，也就是你的隐藏状态的维度。</li>
@@ -101,13 +101,13 @@
 <li>ct是单元的内部记忆。这是（先前的记忆ct-1乘以forget gate） 以及 （新计算出的隐藏状态g） 的结合。因此，从直觉上来说，这代表了我们希望如何去组合先前的记忆和新的输入。我们可以选择完全遗忘旧的记忆（forget gate 全0）或者完全忽略新计算的隐藏状态（input<br>gate 全0），但大多数情况下我们会选择在这两个极端之间的某个方式。</li>
 <li>给定了记忆ct，我们最终计算输出：隐藏状态st，通过将记忆和ouput gate相乘。不是所有的内部记忆都和网络中其他单元所使用的隐藏单元有关。</li>
 </ul>
-<p><img src="../imgs/rnn13.png" alt=""></p>
+<p><img src="../img/rnn13.png" alt=""></p>
 <p>直观来说，普通的RNN可以看作是LSTM的一种特殊情况。如果你把input gate设置为全1，forget gate 设置为全0（遗忘全部先前的记忆）并且output gate设置为全1（暴露全部记忆），你几乎得到了标准的RNN，除了一个额外的tanh会将输出限制一下。gating 机制是LSTM能够明确地对长距离依赖建模的原因。通过学习它的的gates的参数，网络学习了它的的记忆应该如何工作。<br>值得一提的是，现存很多LSTM算法的变体。一个常见的是创建一个peephole connections，允许gates步仅仅依赖于之前的隐藏状态st-1，同时也依赖于之前的内部状态ct-1，在gate计算公式里面增加了一个项。还有很多其他的变体。<a href="http://arxiv.org/pdf/1503.04069.pdf" target="_blank" rel="external">LSTM: A Search Space Odyssey</a>总结评估了不同的LSTM算法。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" data-id="ciunpnnjv00021bplbwr2rpns" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" data-id="ciunpv6vl000z45pl3dze5tz6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -116,8 +116,17 @@
     
 <nav id="article-nav">
   
+    <a href="/2016/10/24/RNN教程,part2-实现一个RNN/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
   
-    <a href="/2016/10/09/RNN教程,part2-实现一个RNN/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2016/09/21/redux入门/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title"></div>
     </a>
@@ -167,11 +176,11 @@
       <ul>
         
           <li>
-            <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/">(no title)</a>
+            <a href="/2016/10/24/RNN教程,part2-实现一个RNN/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2016/10/09/RNN教程,part2-实现一个RNN/">(no title)</a>
+            <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/">(no title)</a>
           </li>
         
           <li>
