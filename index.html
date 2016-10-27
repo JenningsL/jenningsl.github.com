@@ -61,10 +61,185 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-RNN教程，part3，BPTT and Vanishing Gradients" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/27/RNN教程，part3，BPTT and Vanishing Gradients/" class="article-date">
+  <time datetime="2016-10-27T12:11:32.000Z" itemprop="datePublished">2016-10-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这是RNN教程的第三部分。</p>
+<p>在之前的教程中，我们从零开始实现了一个RNN，但没有深入Backpropagation Through Time(BPTT)是怎么计算梯度的细节。在这个部分中，我们将给出BPTT的概述以及它和传统反向传播的不同。然后我们会尝试理解vanishing gradient problem，LSTM和GRU，两个目前在NLP和其他领域最为流行的模型，就是为了解决它而产生的。vanishing gradient problem 由Sepp Hochreiter 在1991年首次发现，并且随着深度学习架构的广泛使用不断得到关注。</p>
+<p>为了完全理解这部分教程，我建议读者熟悉偏微分和基本的反向传播原理。如果不是的话，你可以在<a href="http://cs231n.github.io/optimization-2/" target="_blank" rel="external">这</a>，<a href="http://colah.github.io/posts/2015-08-Backprop/" target="_blank" rel="external">这</a>，<a href="http://neuralnetworksanddeeplearning.com/chap2.html" target="_blank" rel="external">这</a>看到几篇很好的教程，难度递增。</p>
+<h2 id="BACKPROPAGATION_THROUGH_TIME_(BPTT)">BACKPROPAGATION THROUGH TIME (BPTT)</h2><p>让我们快速回忆一下RNN的基本公式。注意到，为了和其他参考文献保持一致，我把o改成了y^。</p>
+<p><img src="../img/rnn14.png" alt=""></p>
+<p>我们同样定义了损失（错误）为交叉熵损失：</p>
+<p><img src="../img/rnn15.png" alt=""></p>
+<p>在这里，yt是在时间步t的正确输出，y^t是我们的预测。我们通常把整个句子看作一个训练样本，因此总误差是每一步的误差的总和。</p>
+<p><img src="../img/rnn16.png" alt=""></p>
+<p>记住，我们的目标是计算参数U，V，W造成的误差的梯度，然后使用Stochastic Gradient Descent学习到一个良好的模型。跟我们把误差累加一样，我们同样累加在一个训练样本里所有时间步的梯度：<img src="../img/rnn17.png" alt=""><br>为了计算这些梯度，我们使用微分的链式法则。在剩余的篇章里，为了更具体，我将使用E3作为例子。</p>
+<p><img src="../img/rnn18.png" alt=""></p>
+<p>在上面的式子中，z3 = Vs3，圈叉是两个向量的外积。这里的重点是，求这个微分只和当前时间步有关。但是对于这个式子 <img src="../img/rnn19.png" alt="">则不一样了，注意到 <img src="../img/rnn20.png" alt="">依赖于s2，s2又依赖于s1，以此类推。所以当求W的微分时，我们不能把s2当做常数。我们需要使用再次使用链式法则：</p>
+<p><img src="../img/rnn21.png" alt=""> </p>
+<p>我们将每个时间步的贡献累加到梯度。换句话说，因为W在每个时间步中都会用到，我们需要在网络中从t=3反向传播梯度到t=0:</p>
+<p><img src="../img/rnn22.png" alt=""> </p>
+<p>注意到这和deep Feedforward Neural Networks中使用的标准反向传播算法完全一样。关键的不同点在于我们把不同时间步的W的梯度累加起来。在传统的NN，我们在不同层之间不共享参数，所以我们不需要累加任何东西。但是在我的观点里，BPTT只是 在未展开的RNN中的标准反向传播的别名。就和反向传播一样，你可以定义一个delta向量用来反向传递，e.g:<img src="../img/rnn23.png" alt="">。公式同样适用。</p>
+<p>一个简陋的BPTT实现如下：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bptt</span></span>(<span class="keyword">self</span>, x, y)<span class="symbol">:</span></span><br><span class="line">    <span class="constant">T </span>= len(y)</span><br><span class="line">    <span class="comment"># Perform forward propagation</span></span><br><span class="line">    o, s = <span class="keyword">self</span>.forward_propagation(x)</span><br><span class="line">    <span class="comment"># We accumulate the gradients in these variables</span></span><br><span class="line">    dLdU = np.zeros(<span class="keyword">self</span>.<span class="constant">U.</span>shape)</span><br><span class="line">    dLdV = np.zeros(<span class="keyword">self</span>.<span class="constant">V.</span>shape)</span><br><span class="line">    dLdW = np.zeros(<span class="keyword">self</span>.<span class="constant">W.</span>shape)</span><br><span class="line">    delta_o = o</span><br><span class="line">    delta_o[np.arange(len(y)), y] -= <span class="number">1</span>.</span><br><span class="line">    <span class="comment"># For each output backwards...</span></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> np.arange(<span class="constant">T)</span>[<span class="symbol">:</span><span class="symbol">:-</span><span class="number">1</span>]<span class="symbol">:</span></span><br><span class="line">        dLdV += np.outer(delta_o[t], s[t].<span class="constant">T)</span></span><br><span class="line">        <span class="comment"># Initial delta calculation: dL/dz</span></span><br><span class="line">        delta_t = <span class="keyword">self</span>.<span class="constant">V.T.</span>dot(delta_o[t]) * (<span class="number">1</span> - (s[t] ** <span class="number">2</span>))</span><br><span class="line">        <span class="comment"># Backpropagation through time (for at most self.bptt_truncate steps)</span></span><br><span class="line">        <span class="keyword">for</span> bptt_step <span class="keyword">in</span> np.arange(max(<span class="number">0</span>, t-<span class="keyword">self</span>.bptt_truncate), t+<span class="number">1</span>)[<span class="symbol">:</span><span class="symbol">:-</span><span class="number">1</span>]<span class="symbol">:</span></span><br><span class="line">            <span class="comment"># print "Backpropagation step t=%d bptt step=%d " % (t, bptt_step)</span></span><br><span class="line">            <span class="comment"># Add to gradients at each previous step</span></span><br><span class="line">            dLdW += np.outer(delta_t, s[bptt_step-<span class="number">1</span>])              </span><br><span class="line">            dLdU[<span class="symbol">:</span>,x[bptt_step]] += delta_t</span><br><span class="line">            <span class="comment"># Update delta for next step dL/dz at t-1</span></span><br><span class="line">            delta_t = <span class="keyword">self</span>.<span class="constant">W.T.</span>dot(delta_t) * (<span class="number">1</span> - s[bptt_step-<span class="number">1</span>] ** <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> [dLdU, dLdV, dLdW]</span><br></pre></td></tr></table></figure>
+<p>这应该给了你关于传统RNN为什么很难训练的感受：序列可以很长，所以你需要回溯很多层。在实际应用中，很多人会限制只回溯几层。</p>
+<h2 id="VANISHING_GRADIENT_PROBLEM">VANISHING GRADIENT PROBLEM</h2><p>在之前的教程中，我们提到过RNN在学习长距离依赖上有困难。这是有问题的，因为英文句子的意思往往由相距较远的词语决定的。“The man who wore a wig on his head went inside” 这个句式实际上是关于一个男人（man）走进来，而不是一顶假发（wig）。但RNN不太可能捕捉到这样的信息。为了理解其中的原因，让我们来仔细看一下我们前文计算的梯度：</p>
+<p><img src="../img/rnn21.png" alt=""></p>
+<p>注意到<img src="../img/rnn24.png" alt="">本身也是应用了链式规则的，例如<img src="../img/rnn25.png" alt="">。同样注意到，因为我们求的是向量的函数对向量的微分，结果是一个矩阵（称为雅可比矩阵），其中每个元素是对应的微分。我们可以重写以上的梯度：</p>
+<p><img src="../img/rnn27.png" alt=""></p>
+<p>It turns out (I won’t prove it here but this paper goes into detail) that the 2-norm, which you can think of it as an absolute value, of the above Jacobian matrix has an upper bound of 1. This makes intuitive sense because our tanh (or sigmoid) activation function maps all values into a range between -1 and 1, and the derivative is bounded by 1 (1/4 in the case of sigmoid) as well:</p>
+<p><img src="../img/rnn28.png" alt=""></p>
+<p>你可以看到tanh 和 sigmoid 函数在两端都有趋向0的导数。当这个发生时，我们说相应的神经元饱和（saturated）了。它们的梯度为0，并且导致在之前的其他层的梯度也变为0。因此，矩阵中的元素值很小加上多次的矩阵相乘，梯度值呈指数式收缩，最终在几个时间步之后完全消失了。在好几步时间步以前的梯度变成了0，而且这些时间步的状态不能给学习提供信息：结果就是学习不到长距离的依赖。消失的梯度不是RNN特有的。它同样会在deep Feedforward Neural Networks中发生。只是RNN很容易变的很深（在我们的例子中是和句子的长度一样深），这导致了消失的梯度问题更加常见。<br>不难想象，根据我们的激励函数和网络参数，当雅可比矩阵的元素值很大时，我们会的到一个爆炸式而不是消失的梯度。确实，这称为爆炸的梯度问题。之所以消失的梯度问题会获得更多的关注，有两方面原因：一、爆炸的梯度问题很明显。你的梯度会变成NaN，你的程序会crash。二、用一个预定的阈值限制梯度，是一个简单而有效的方法去防止这个爆炸的梯度问题。消失的梯度麻烦更大，因为它不明显，而且当发生的时候不容易处理。<br>幸运的是，现存很多方法去解决这个问题。合理地初始化W矩阵能减轻消失的梯度问题的影响，正则化也可以。更好的解决方法是使用<a href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks" target="_blank" rel="external">ReLU</a>)来代替tanh或者sigmoid激励函数。ReLU的微分要么是0要么是1，所以不太可能受到消失的梯度的影响。更加流行的方法是使用Long Short-Term Memory(LSTM) 或者 Gated Recurrent Unit（GRU）架构。LSTMs were <a href="http://deeplearning.cs.cmu.edu/pdfs/Hochreiter97_lstm.pdf" target="_blank" rel="external">first proposed in 1997</a> and are the perhaps most widely used models in NLP today. GRUs, <a href="http://arxiv.org/pdf/1406.1078v3.pdf" target="_blank" rel="external">first proposed in 2014</a>, are simplified versions of LSTMs. 这两种RNN架构都是为了解决消失的梯度问题并且有效地学习长距离依赖而设计的。我们会在下部分的教程中讨论它们。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/10/27/RNN教程，part3，BPTT and Vanishing Gradients/" data-id="ciusb88yr000zbpplbxkbpda6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-RNN教程，part1-介绍RNN（译）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/24/RNN教程，part1-介绍RNN（译）/" class="article-date">
+  <time datetime="2016-10-24T08:53:20.000Z" itemprop="datePublished">2016-10-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>原文地址：<a href="http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/" target="_blank" rel="external">http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/</a></p>
+<p>递归神经网络（RNN）是在许多NLP任务中有着不错效果的流行模型。尽管流行，但是介绍RNN的原理和实现的资料却比较少，这就是这篇教程的目的。本文包括以下几个部分：</p>
+<ul>
+<li><p>介绍RNN（本文）</p>
+</li>
+<li><p>基于Python和Theano实现RNN</p>
+</li>
+<li><p>理解Backpropagation Through Time(BPTT)算法和vanishing gradient problem</p>
+</li>
+<li><p>实现一个GRU/LSTM RNN</p>
+</li>
+</ul>
+<p>作为教程的一部分，我们会实现一个基于递归神经网络的语言模型。这个语言模型的应用有两方面：1.它能根据在现实中出现的概率对任意句子进行评分。这提供了语法判断的可能性。常用于机器翻译系统。2.它允许我们产生新的文本，根据莎士比亚的文集训练的模型能让我们产生类似莎士比亚风格的文字。这篇Andrej Karpathy写的有趣的文章展示了基于RNN的字符级别语言模型的能力。<br>我假设你已经对神经网络比较熟悉了，如果不是，这里有一篇教程。</p>
+<h2 id="什么是RNNS？">什么是RNNS？</h2><p>RNNs背后的思想是利用序列信息。在传统的神经网络中，我们假设所有输入（输出）相互之间是独立的。但是对于很多任务来说，这是一个糟糕的主意。如果你想预测句子中的下一个词，那么你最好知道它的前一个词是什么。RNNs被称为递归神经网络，因为它对序列中的每个元素都执行同一个任务，根据之前的计算输出结果。或者我们可以理解为，RNN拥有关于目前为止所计算到的信息的记忆。理论上，RNN可以利用任意长度的序列的信息，但实际上我们会限制往回看的步数。这是一个典型的RNN的样子：</p>
+<p><img src="http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/rnn.jpg" alt=""><br>A recurrent neural network and the unfolding in time of the computation involved in its forward computation. Source: Nature</p>
+<p>以上的图表展示了RNN被展开为完整的网络的过程。展开就是书写整个序列的网络的意思。例如，如果我们关系的序列是5个单词的句子，那网络可以展开为5层神经网络，每层对应一个单词。RNN的相关计算公式如下：</p>
+<ul>
+<li><p>是在时间步t的输入。例如 可以是一个对应了句子中第二个单词的one-hot vector</p>
+</li>
+<li><p>是时间步t的隐藏状态（hidden state）这是网络的记忆。 是基于先前的隐藏状态和当前的输入计算的：。函数  通常是非线形的，如 tanh或ReLU。在计算第一个隐藏状态时，通常被初始化为全0。</p>
+</li>
+<li><p>是时间步t的输出。例如，我们要预测下一个出现的词时，输出就是所有备选单词的概率向量。</p>
+</li>
+</ul>
+<p>有几个地方值得注意的：</p>
+<ul>
+<li><p>你可以认为隐藏状态是网络的记忆，捕捉了在此前的信息。 完全根据在t时的记忆。在实际应用中，这通常会更复杂，因为不能保存太多步以前的信息。</p>
+</li>
+<li><p>传统神经网络每一层使用的参数通常不一样，RNN却在全部步骤间共享着同样的参数( above) 。这反映了我们在每步执行同样的任务的事实，只是输入不同而已。这大大地减少了需要学习的参数。</p>
+</li>
+<li><p>上面的图表中，每一个时间步t都有一个输出，但这不是必须的。例如我们需要判断句子的情感倾向，则只关心最终输出，而不是每个词的输出。同样的，我们也许不是每一步都需要输入。RNN主要的特征在它的隐藏层，其中保存了序列的信息。</p>
+</li>
+</ul>
+<h2 id="RNN能做什么？">RNN能做什么？</h2><p>最常用的RNN类型是LSTM，它在捕获长距离的依赖方面比普通的RNN表现要出色。但不要担心，LSTM在本质上和RNN是同一个东西，我们会在这个课程里开发，只是在计算隐藏状态时用了不同的方法。之后的文章会详细的介绍LSTM。下面是RNN在NLP领域的应用。</p>
+<h3 id="语言建模和生产文本">语言建模和生产文本</h3><p>。。。</p>
+<h3 id="机器翻译">机器翻译</h3><p>。。。</p>
+<p><img src="http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/Screen-Shot-2015-09-17-at-10.39.06-AM-1024x557.png" alt=""><br>RNN for Machine Translation. Image Source: <a href="http://cs224d.stanford.edu/lectures/CS224d-Lecture8.pdf" target="_blank" rel="external">http://cs224d.stanford.edu/lectures/CS224d-Lecture8.pdf</a></p>
+<p>Research papers about Machine Translation:</p>
+<ul>
+<li>A Recursive Recurrent Neural Network for Statistical Machine Translation</li>
+<li>Sequence to Sequence Learning with Neural Networks</li>
+<li>Joint Language and Translation Modeling with Recurrent Neural Networks</li>
+</ul>
+<h3 id="语音识别">语音识别</h3><p>。。。</p>
+<p>Research papers about Speech Recognition:</p>
+<ul>
+<li>Towards End-to-End Speech Recognition with Recurrent Neural Networks</li>
+</ul>
+<h3 id="产生图像描述">产生图像描述</h3><p><img src="http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/Screen-Shot-2015-09-17-at-11.44.24-AM-1024x349.png" alt=""><br>Deep Visual-Semantic Alignments for Generating Image Descriptions. Source: <a href="http://cs.stanford.edu/people/karpathy/deepimagesent/" target="_blank" rel="external">http://cs.stanford.edu/people/karpathy/deepimagesent/</a></p>
+<h2 id="训练RNN">训练RNN</h2><p>训练RNN和训练传统神经网络类似。我们同样使用backpropagation算法，但有一些不同。因为在所有时间步间共享参数，每个输出的梯度步仅仅取决于当前的时间步，也取决于之前的时间步。例如，为了计算t=4时的梯度，我们需要反向传播3步，然后将累加这些梯度。这叫做 Backpropagation Through Time (BPTT)。普通的RNN在使用BPTT学习长距离依赖（如：距离很远的两个依赖的时间步）时有困难，因为vanishing/exploding gradient problem。有一些技巧去梳理这些问题，而且特定的RNN类型如LSTM就是专门为了解决这些问题产生的。</p>
+<h2 id="RNN扩展">RNN扩展</h2><h3 id="Bidirectional_RNNs_双向">Bidirectional RNNs 双向</h3><p><img src="http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/bidirectional-rnn-300x196.png" alt=""></p>
+<p>Deep (Bidirectional) RNNs</p>
+<h3 id="双向多层">双向多层</h3><p><img src="http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/09/Screen-Shot-2015-09-16-at-2.21.51-PM-272x300.png" alt=""></p>
+<h2 id="LSTM_networks">LSTM networks</h2><p>这是近年来很流行的。LSTM并没有在架构上和RNN有什么不同，但它使用了不同的函数来计算隐藏状态。LSTM中的记忆被称为cells，你可以把它们当作黑盒，接受之前的状态 和当前的输入 .作为黑盒的输入。在这些cells内部，决定什么记忆会被保留，什么记忆会被抹去。然后结合之前的状态，当前的记忆以及输入。结果显示，这些类型的单元在捕获长距离依赖方面很有效，LSTM一开始很容易让人困惑，感兴趣可以看this post has an excellent explanation</p>
+<h2 id="结论">结论</h2><p>希望你已经对RNN有了基本的了解，下一篇文章，我们将使用Python和Theano实现第一个版本的语言模型</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/10/24/RNN教程，part1-介绍RNN（译）/" data-id="ciusb88yu0010bpplt59m43rj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-RNN教程,part4,实现GRU:LSTM RNN" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" class="article-date">
+  <time datetime="2016-10-24T07:57:17.000Z" itemprop="datePublished">2016-10-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="LSTM_网络">LSTM 网络</h2><p>在part3中，我们看到了“消失的梯度”问题是如何给标准的RNN学习长距离依赖时造成困难的。LSTM是专门设计来解决“消失的梯度”问题，其中使用了一个门限（gating）的机制。为了更好地理解，让我们来看看LSTM是如何计算隐藏状态st的（我使用了o来代表点乘）：</p>
+<p><img src="../img/rnn10.png" alt=""></p>
+<p>这些等式看起很复杂，但实际上没那么难。首先，注意到LSTM层只是计算隐藏状态的另一种方法。在之前，我们计算隐藏层的公式是：</p>
+<p><img src="../img/rnn11.png" alt=""></p>
+<p>这个单元的输入是xt（当前时间步t的输入），和st-1（之前的隐藏状态）。输出是一个新的隐藏状态st。一个LSTM单元做的是完全相同的事情，只是用不同的方法。这是从宏观上来理解的关键。你可以从根本上将LSTM和GRU看作是一个黑盒子。给定当前的输入和之前的隐藏状态，它们通过某种方法计算下一个隐藏状态。</p>
+<p><img src="../img/rnn12.png" alt=""></p>
+<p>带着这个想法，让我们尝试去直观地感受LSTM是如何计算隐藏状态的。Chris Olah有<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">一篇很好的教程</a>，在这里就不在赘述了。我强烈推荐你去看一下这边细节的教程。但总结如下：</p>
+<ul>
+<li>i,f,o分别被称为input gates,forget gates和output gates。注意到它们的计算公式是一样的，只是参数矩阵不同。它们被称为gates是因为sigmoid函数将这些向量的值限制在0～1之间，然后通过将他们和其他向量点乘，你定义了你想让其他向量“通过多少（let through）”。input gate 定义了让多少 根据当前输入新计算的状态 通过。forget gate定义了让多少之前的状态通过。最后，output gate 定义了你想要暴露多少内部状态给外部网络（更高的层和下一个时间步）。所有的gates 都有同样的维度ds，也就是你的隐藏状态的维度。</li>
+<li>g是一个“候选”隐藏状态，基于当前的输入和先前的隐藏状态计算得出。这和普通的RNN中的计算公式是一模一样的，我们只是把参数U和W改名成Ug和Wg而已。然后，我们不是直接将g作为新的隐藏状态，我们会使用上面提到的input gate来挑选其中的一部分。</li>
+<li>ct是单元的内部记忆。这是（先前的记忆ct-1乘以forget gate） 以及 （新计算出的隐藏状态g） 的结合。因此，从直觉上来说，这代表了我们希望如何去组合先前的记忆和新的输入。我们可以选择完全遗忘旧的记忆（forget gate 全0）或者完全忽略新计算的隐藏状态（input<br>gate 全0），但大多数情况下我们会选择在这两个极端之间的某个方式。</li>
+<li>给定了记忆ct，我们最终计算输出：隐藏状态st，通过将记忆和ouput gate相乘。不是所有的内部记忆都和网络中其他单元所使用的隐藏单元有关。</li>
+</ul>
+<p><img src="../img/rnn13.png" alt=""></p>
+<p>直观来说，普通的RNN可以看作是LSTM的一种特殊情况。如果你把input gate设置为全1，forget gate 设置为全0（遗忘全部先前的记忆）并且output gate设置为全1（暴露全部记忆），你几乎得到了标准的RNN，除了一个额外的tanh会将输出限制一下。gating 机制是LSTM能够明确地对长距离依赖建模的原因。通过学习它的的gates的参数，网络学习了它的的记忆应该如何工作。<br>值得一提的是，现存很多LSTM算法的变体。一个常见的是创建一个peephole connections，允许gates步仅仅依赖于之前的隐藏状态st-1，同时也依赖于之前的内部状态ct-1，在gate计算公式里面增加了一个项。还有很多其他的变体。<a href="http://arxiv.org/pdf/1503.04069.pdf" target="_blank" rel="external">LSTM: A Search Space Odyssey</a>总结评估了不同的LSTM算法。</p>
+<h2 id="其他参考">其他参考</h2><p><a href="http://www.jianshu.com/p/9dc9f41f0b29" target="_blank" rel="external">理解 LSTM 网络</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" data-id="ciusb88yv0011bpplqbgdjghp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-RNN教程,part2-实现一个RNN" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/10/24/RNN教程,part2-实现一个RNN/" class="article-date">
-  <time datetime="2016-10-24T07:02:59.000Z" itemprop="datePublished">2016-10-24</time>
+  <time datetime="2016-10-24T07:04:47.000Z" itemprop="datePublished">2016-10-24</time>
 </a>
     
   </div>
@@ -91,8 +266,8 @@
 <p>我们来试一下这两个方法以及它们的输出：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">np<span class="class">.random</span><span class="class">.seed</span>(<span class="number">10</span>)</span><br><span class="line">model = <span class="function"><span class="title">RNNNumpy</span><span class="params">(vocabulary_size)</span></span></span><br><span class="line">o, s = model.<span class="function"><span class="title">forward_propagation</span><span class="params">(X_train[<span class="number">10</span>])</span></span></span><br><span class="line">print o<span class="class">.shape</span></span><br><span class="line">print o</span><br><span class="line"></span><br><span class="line">predictions = model.<span class="function"><span class="title">predict</span><span class="params">(X_train[<span class="number">10</span>])</span></span></span><br><span class="line">print predictions<span class="class">.shape</span></span><br><span class="line">print predictions</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(45, 8000)</span><br><span class="line">[[ <span class="number">0.00012408</span>  <span class="number">0.0001244</span>   <span class="number">0.00012603</span> ...,  <span class="number">0.00012515</span>  <span class="number">0.00012488</span></span><br><span class="line">   <span class="number">0.00012508</span>]</span><br><span class="line"> [ <span class="number">0.00012536</span>  <span class="number">0.00012582</span>  <span class="number">0.00012436</span> ...,  <span class="number">0.00012482</span>  <span class="number">0.00012456</span></span><br><span class="line">   <span class="number">0.00012451</span>]</span><br><span class="line"> [ <span class="number">0.00012387</span>  <span class="number">0.0001252</span>   <span class="number">0.00012474</span> ...,  <span class="number">0.00012559</span>  <span class="number">0.00012588</span></span><br><span class="line">   <span class="number">0.00012551</span>]</span><br><span class="line"> ...,</span><br><span class="line"> [ <span class="number">0.00012414</span>  <span class="number">0.00012455</span>  <span class="number">0.0001252</span>  ...,  <span class="number">0.00012487</span>  <span class="number">0.00012494</span></span><br><span class="line">   <span class="number">0.0001263</span> ]</span><br><span class="line"> [ <span class="number">0.0001252</span>   <span class="number">0.00012393</span>  <span class="number">0.00012509</span> ...,  <span class="number">0.00012407</span>  <span class="number">0.00012578</span></span><br><span class="line">   <span class="number">0.00012502</span>]</span><br><span class="line"> [ <span class="number">0.00012472</span>  <span class="number">0.0001253</span>   <span class="number">0.00012487</span> ...,  <span class="number">0.00012463</span>  <span class="number">0.00012536</span></span><br><span class="line">   <span class="number">0.00012665</span>]]</span><br><span class="line"></span><br><span class="line">   (45,)</span><br><span class="line">[<span class="number">1284 5221</span> <span class="number">7653 7430</span> <span class="number">1013 3562</span> <span class="number">7366 4860</span> <span class="number">2212 6601</span> <span class="number">7299 4556</span> <span class="number">2481 238 253</span>9</span><br><span class="line"> <span class="number">21 6548 26</span><span class="number">1 1780 200</span><span class="number">5 1810 53</span><span class="number">76 4146 47</span><span class="number">7 7051 48</span><span class="number">32 4991 89</span><span class="number">7 3485 21</span></span><br><span class="line"> <span class="number">7291 2007</span> <span class="number">6006 760</span> <span class="number">4864 2182</span> <span class="number">6569 2800</span> <span class="number">2752 6821</span> <span class="number">4437 7021</span> <span class="number">7875 6912</span> 3575]</span><br></pre></td></tr></table></figure>
 <p>由于我们的随机初始化了U，V，W，所以现在预测是完全随机的。</p>
-<h2 id="计算代价">计算代价</h2><p>我们使用代价函数L来衡量模型的表现，我们的目标是找到参数U，V，W，使得代价函数在我们的数据里最小。一个常见的选择是cross-entropy loss。如果我们有N个训练样本，和C个类别（词汇库的大小），那么预测o和标签y的代价函数是：<br><img src="../imgs/rnn6.png" alt="cost-function"><br>根据公式的定义，假设标签说第i个位置是正确的答案，也就是说y_n的第i个元素是1时，o_n的第i个元素如果为1，那么yn<em>logo_n=0，因为正确所以代价为0；反之，如果o_n的第i个元素比1小，那么yn</em>logo_n &lt; 0，所以代价不为0，而且o_n偏离1越远，代价越大。可以看到下面的实现中，因为y_n实际上是one-hot vector，所以我们只需要看正确的位置上对应的o_n即可，因为其他代价肯定是0。<br>以下是实现代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculate_total_loss</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">    L = <span class="number">0</span></span><br><span class="line">    <span class="comment"># For each sentence...</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> np.arange(len(y)):</span><br><span class="line">        o, s = self.forward_propagation(x[i])</span><br><span class="line">        <span class="comment"># We only care about our prediction of the "correct" words</span></span><br><span class="line">        correct_word_predictions = o[np.arange(len(y[i])), y[i]]</span><br><span class="line">        <span class="comment"># Add to the loss based on how off we were</span></span><br><span class="line">        L += -<span class="number">1</span> * np.sum(np.log(correct_word_predictions))</span><br><span class="line">    <span class="keyword">return</span> L</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculate_loss</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">    <span class="comment"># Divide the total loss by the number of training examples</span></span><br><span class="line">    N = np.sum((len(y_i) <span class="keyword">for</span> y_i <span class="keyword">in</span> y))</span><br><span class="line">    <span class="keyword">return</span> self.calculate_total_loss(x,y)/N</span><br><span class="line"></span><br><span class="line">RNNNumpy.calculate_total_loss = calculate_total_loss</span><br><span class="line">RNNNumpy.calculate_loss = calculate_loss</span><br></pre></td></tr></table></figure></p>
-<p>让我们后退一步，思考一下随机预测的代价应该是多少。这会给我们一个参考基线，以及确保我们的实现是正确的。我们的词汇库大小是C，因此每个单词应该以1/C的概率被预测，进而得到代价是：<br><img src="../imgs/rnn7.png" alt="loss"><br>可以通过实验验证：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Limit to 1000 examples to save time</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"Expected Loss for random predictions: <span class="variable">%f</span>"</span> % np.<span class="keyword">log</span>(vocabulary_size)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Actual loss: <span class="variable">%f</span>"</span> % model.calculate_loss(X_train[:<span class="number">1000</span>], y_train[:<span class="number">1000</span>])</span><br></pre></td></tr></table></figure></p>
+<h2 id="计算代价">计算代价</h2><p>我们使用代价函数L来衡量模型的表现，我们的目标是找到参数U，V，W，使得代价函数在我们的数据里最小。一个常见的选择是cross-entropy loss。如果我们有N个训练样本，和C个类别（词汇库的大小），那么预测o和标签y的代价函数是：<br><img src="../img/rnn6.png" alt="cost-function"><br>根据公式的定义，假设标签说第i个位置是正确的答案，也就是说y_n的第i个元素是1时，o_n的第i个元素如果为1，那么yn<em>logo_n=0，因为正确所以代价为0；反之，如果o_n的第i个元素比1小，那么yn</em>logo_n &lt; 0，所以代价不为0，而且o_n偏离1越远，代价越大。可以看到下面的实现中，因为y_n实际上是one-hot vector，所以我们只需要看正确的位置上对应的o_n即可，因为其他代价肯定是0。<br>以下是实现代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculate_total_loss</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">    L = <span class="number">0</span></span><br><span class="line">    <span class="comment"># For each sentence...</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> np.arange(len(y)):</span><br><span class="line">        o, s = self.forward_propagation(x[i])</span><br><span class="line">        <span class="comment"># We only care about our prediction of the "correct" words</span></span><br><span class="line">        correct_word_predictions = o[np.arange(len(y[i])), y[i]]</span><br><span class="line">        <span class="comment"># Add to the loss based on how off we were</span></span><br><span class="line">        L += -<span class="number">1</span> * np.sum(np.log(correct_word_predictions))</span><br><span class="line">    <span class="keyword">return</span> L</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculate_loss</span><span class="params">(self, x, y)</span>:</span></span><br><span class="line">    <span class="comment"># Divide the total loss by the number of training examples</span></span><br><span class="line">    N = np.sum((len(y_i) <span class="keyword">for</span> y_i <span class="keyword">in</span> y))</span><br><span class="line">    <span class="keyword">return</span> self.calculate_total_loss(x,y)/N</span><br><span class="line"></span><br><span class="line">RNNNumpy.calculate_total_loss = calculate_total_loss</span><br><span class="line">RNNNumpy.calculate_loss = calculate_loss</span><br></pre></td></tr></table></figure></p>
+<p>让我们后退一步，思考一下随机预测的代价应该是多少。这会给我们一个参考基线，以及确保我们的实现是正确的。我们的词汇库大小是C，因此每个单词应该以1/C的概率被预测，进而得到代价是：<br><img src="../img/rnn7.png" alt="loss"><br>可以通过实验验证：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Limit to 1000 examples to save time</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"Expected Loss for random predictions: <span class="variable">%f</span>"</span> % np.<span class="keyword">log</span>(vocabulary_size)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Actual loss: <span class="variable">%f</span>"</span> % model.calculate_loss(X_train[:<span class="number">1000</span>], y_train[:<span class="number">1000</span>])</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Expected Loss <span class="keyword">for</span> random <span class="string">predictions:</span> <span class="number">8.987197</span></span><br><span class="line">Actual <span class="string">loss:</span> <span class="number">8.987440</span></span><br></pre></td></tr></table></figure>
 <h2 id="使用SGD和BPTT来训练RNN">使用SGD和BPTT来训练RNN</h2><p>记住我们的目标是寻找参数U，V，W使得在我们的数据中总代价最小。最常见的方法是随机梯度下降Stochastic Gradient Descent（SGD）。SGD背后的思想很简单。我们在每轮迭代中，遍历所有的训练样本并将参数推向一个使误差减少的方向。这个方向由误差（代价）的梯度<img src="../img/rnn8.png" alt="">来给出。SGD同样需要一个学习效率（learning rate），也就是每次迭代的步长。关于SGD的教程很多，这里不再赘述。<a href="http://cs231n.github.io/optimization-1/" target="_blank" rel="external">这里有个教程</a>。我将实现一个简单版本的SGD，即使是没有相关优化背景的人也能看懂。<br>但我们怎么计算上面提到的梯度？在传统神经网络中，我们使用反向传播算法来计算。在RNN中，我们使用一个稍微不同的算法叫Backpropagation Through Time(BPTT)。因为参数在所有时间步中被共享，每个输出的梯度不仅依赖于当前时间步，还依赖于之前的时间步。如果你懂微积分，这真的只是应用chain rule。下一部分教程全都是关于BPTT的，所以现在我们只需要将它当作一个黑盒子，接收训练样本(x, y)作为输入，返回梯度<img src="../img/rnn8.png" alt=""><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bptt</span></span>(<span class="keyword">self</span>, x, y)<span class="symbol">:</span></span><br><span class="line">    <span class="constant">T </span>= len(y)</span><br><span class="line">    <span class="comment"># Perform forward propagation</span></span><br><span class="line">    o, s = <span class="keyword">self</span>.forward_propagation(x)</span><br><span class="line">    <span class="comment"># We accumulate the gradients in these variables</span></span><br><span class="line">    dLdU = np.zeros(<span class="keyword">self</span>.<span class="constant">U.</span>shape)</span><br><span class="line">    dLdV = np.zeros(<span class="keyword">self</span>.<span class="constant">V.</span>shape)</span><br><span class="line">    dLdW = np.zeros(<span class="keyword">self</span>.<span class="constant">W.</span>shape)</span><br><span class="line">    delta_o = o</span><br><span class="line">    delta_o[np.arange(len(y)), y] -= <span class="number">1</span>.</span><br><span class="line">    <span class="comment"># For each output backwards...</span></span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> np.arange(<span class="constant">T)</span>[<span class="symbol">:</span><span class="symbol">:-</span><span class="number">1</span>]<span class="symbol">:</span></span><br><span class="line">        dLdV += np.outer(delta_o[t], s[t].<span class="constant">T)</span></span><br><span class="line">        <span class="comment"># Initial delta calculation</span></span><br><span class="line">        delta_t = <span class="keyword">self</span>.<span class="constant">V.T.</span>dot(delta_o[t]) * (<span class="number">1</span> - (s[t] ** <span class="number">2</span>))</span><br><span class="line">        <span class="comment"># Backpropagation through time (for at most self.bptt_truncate steps)</span></span><br><span class="line">        <span class="keyword">for</span> bptt_step <span class="keyword">in</span> np.arange(max(<span class="number">0</span>, t-<span class="keyword">self</span>.bptt_truncate), t+<span class="number">1</span>)[<span class="symbol">:</span><span class="symbol">:-</span><span class="number">1</span>]<span class="symbol">:</span></span><br><span class="line">            <span class="comment"># print "Backpropagation step t=%d bptt step=%d " % (t, bptt_step)</span></span><br><span class="line">            dLdW += np.outer(delta_t, s[bptt_step-<span class="number">1</span>])              </span><br><span class="line">            dLdU[<span class="symbol">:</span>,x[bptt_step]] += delta_t</span><br><span class="line">            <span class="comment"># Update delta for next step</span></span><br><span class="line">            delta_t = <span class="keyword">self</span>.<span class="constant">W.T.</span>dot(delta_t) * (<span class="number">1</span> - s[bptt_step-<span class="number">1</span>] ** <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> [dLdU, dLdV, dLdW]</span><br><span class="line"></span><br><span class="line"><span class="constant">RNNNumpy.</span>bptt = bptt</span><br></pre></td></tr></table></figure></p>
 <h2 id="检查梯度">检查梯度</h2><p>在实现实现反向传播的同时实现梯度检查是一个好主意，它能够验证你的实现是否正确。梯度检查背后的思想是参数的微分等于该点的斜率，我们可以稍微改变参数然后除以这个改变，然后就可以得到微分的近似值：<br><img src="../img/rnn9.png" alt=""><br>然后我们使用反向传播计算的梯度和上面的方法计算的梯度进行比较，如果差别不大那就没问题。近似值需要计算每个参数的总代价，所以梯度检查是非常昂贵的操作（毕竟我们有超过1百万的参数需要学习）。所以让它在词汇库更小的模型中执行比较好：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">def gradient_check(self, <span class="keyword">x</span>, <span class="keyword">y</span>, h=<span class="number">0</span>.<span class="number">001</span>, error_threshold=<span class="number">0</span>.<span class="number">01</span>):</span><br><span class="line">    <span class="comment"># Calculate the gradients using backpropagation. We want to checker if these are correct.</span></span><br><span class="line">    bptt_gradients = self.bptt(<span class="keyword">x</span>, <span class="keyword">y</span>)</span><br><span class="line">    <span class="comment"># List of all parameters we want to check.</span></span><br><span class="line">    model_parameters = [<span class="string">'U'</span>, <span class="string">'V'</span>, <span class="string">'W'</span>]</span><br><span class="line">    <span class="comment"># Gradient check for each parameter</span></span><br><span class="line">    <span class="keyword">for</span> pidx, pname in enumerate(model_parameters):</span><br><span class="line">        <span class="comment"># Get the actual parameter value from the mode, e.g. model.W</span></span><br><span class="line">        parameter = operator.attrgetter(pname)(self)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Performing gradient check for parameter <span class="variable">%s</span> with size <span class="variable">%d</span>."</span> % (pname, np.prod(parameter.shape))</span><br><span class="line">        <span class="comment"># Iterate over each element of the parameter matrix, e.g. (0,0), (0,1), ...</span></span><br><span class="line">        it = np.nditer(parameter, flags=[<span class="string">'multi_index'</span>], op_flags=[<span class="string">'readwrite'</span>])</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> it.finished:</span><br><span class="line">            ix = it.multi_index</span><br><span class="line">            <span class="comment"># Save the original value so we can reset it later</span></span><br><span class="line">            original_value = parameter[ix]</span><br><span class="line">            <span class="comment"># Estimate the gradient using (f(x+h) - f(x-h))/(2*h)</span></span><br><span class="line">            parameter[ix] = original_value + h</span><br><span class="line">            gradplus = self.calculate_total_loss([<span class="keyword">x</span>],[<span class="keyword">y</span>])</span><br><span class="line">            parameter[ix] = original_value - h</span><br><span class="line">            gradminus = self.calculate_total_loss([<span class="keyword">x</span>],[<span class="keyword">y</span>])</span><br><span class="line">            estimated_gradient = (gradplus - gradminus)/(<span class="number">2</span>*h)</span><br><span class="line">            <span class="comment"># Reset parameter to original value</span></span><br><span class="line">            parameter[ix] = original_value</span><br><span class="line">            <span class="comment"># The gradient for this parameter calculated using backpropagation</span></span><br><span class="line">            backprop_gradient = bptt_gradients[pidx][ix]</span><br><span class="line">            <span class="comment"># calculate The relative error: (|x - y|/(|x| + |y|))</span></span><br><span class="line">            relative_error = np.<span class="keyword">abs</span>(backprop_gradient - estimated_gradient)/(np.<span class="keyword">abs</span>(backprop_gradient) + np.<span class="keyword">abs</span>(estimated_gradient))</span><br><span class="line">            <span class="comment"># If the error is to large fail the gradient check</span></span><br><span class="line">            <span class="keyword">if</span> relative_error &amp;<span class="keyword">gt</span>; error_threshold:</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"Gradient Check ERROR: parameter=<span class="variable">%s</span> ix=<span class="variable">%s</span>"</span> % (pname, ix)</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"+h Loss: <span class="variable">%f</span>"</span> % gradplus</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"-h Loss: <span class="variable">%f</span>"</span> % gradminus</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"Estimated_gradient: <span class="variable">%f</span>"</span> % estimated_gradient</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"Backpropagation gradient: <span class="variable">%f</span>"</span> % backprop_gradient</span><br><span class="line">                <span class="keyword">print</span> <span class="string">"Relative Error: <span class="variable">%f</span>"</span> % relative_error</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            it.iternext()</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"Gradient check for parameter <span class="variable">%s</span> passed."</span> % (pname)</span><br><span class="line"></span><br><span class="line">RNNNumpy.gradient_check = gradient_check</span><br><span class="line"></span><br><span class="line"><span class="comment"># To avoid performing millions of expensive calculations we use a smaller vocabulary size for checking.</span></span><br><span class="line">grad_check_vocab_size = <span class="number">100</span></span><br><span class="line">np.random.seed(<span class="number">10</span>)</span><br><span class="line">model = RNNNumpy(grad_check_vocab_size, <span class="number">10</span>, bptt_truncate=<span class="number">1000</span>)</span><br><span class="line">model.gradient_check([<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br></pre></td></tr></table></figure></p>
@@ -123,48 +298,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/10/24/RNN教程,part2-实现一个RNN/" data-id="ciunpv6vm001045plh2q3f83d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-RNN教程,part4,实现GRU:LSTM RNN" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" class="article-date">
-  <time datetime="2016-10-24T07:02:10.000Z" itemprop="datePublished">2016-10-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="LSTM_网络">LSTM 网络</h2><p>在part3中，我们看到了“消失的梯度”问题是如何给标准的RNN学习长距离依赖时造成困难的。LSTM是专门设计来解决“消失的梯度”问题，其中使用了一个阈值的机制。为了更好地理解，让我们来看看LSTM是如何计算隐藏状态st的（我使用了o来代表点乘）：</p>
-<p><img src="../img/rnn10.png" alt=""></p>
-<p>这些等式看起很复杂，但实际上没那么难。首先，注意到LSTM层只是计算隐藏状态的另一种方法。在之前，我们计算隐藏层的公式是：</p>
-<p><img src="../img/rnn11.png" alt=""></p>
-<p>这个单元的输入是xt（当前时间步t的输入），和st-1（之前的隐藏状态）。输出是一个新的隐藏状态st。一个LSTM单元做的是完全相同的事情，只是用不同的方法。这是从宏观上来理解的关键。你可以从根本上将LSTM和GRU看作是一个黑盒子。给定当前的输入和之前的隐藏状态，它们通过某种方法计算下一个隐藏状态。</p>
-<p><img src="../img/rnn12.png" alt=""></p>
-<p>带着这个想法，让我们尝试去直观地感受LSTM是如何计算隐藏状态的。Chris Olah有<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">一篇很好的教程</a>，在这里就不在赘述了。我强烈推荐你去看一下这边细节的教程。但总结如下：</p>
-<ul>
-<li>i,f,o分别被称为input gates,forget gates和output gates。注意到它们的计算公式是一样的，只是参数矩阵不同。它们被称为gates是因为sigmoid函数将这些向量的值限制在0～1之间，然后通过将他们和其他向量点乘，你定义了你想让其他向量“通过多少（let through）”。input gate 定义了让多少 根据当前输入新计算的状态 通过。forget gate定义了让多少之前的状态通过。最后，output gate 定义了你想要暴露多少内部状态给外部网络（更高的层和下一个时间步）。所有的gates 都有同样的维度ds，也就是你的隐藏状态的维度。</li>
-<li>g是一个“候选”隐藏状态，基于当前的输入和先前的隐藏状态计算得出。这和普通的RNN中的计算公式是一模一样的，我们只是把参数U和W改名成Ug和Wg而已。然后，我们不是直接将g作为新的隐藏状态，我们会使用上面提到的input gate来挑选其中的一部分。</li>
-<li>ct是单元的内部记忆。这是（先前的记忆ct-1乘以forget gate） 以及 （新计算出的隐藏状态g） 的结合。因此，从直觉上来说，这代表了我们希望如何去组合先前的记忆和新的输入。我们可以选择完全遗忘旧的记忆（forget gate 全0）或者完全忽略新计算的隐藏状态（input<br>gate 全0），但大多数情况下我们会选择在这两个极端之间的某个方式。</li>
-<li>给定了记忆ct，我们最终计算输出：隐藏状态st，通过将记忆和ouput gate相乘。不是所有的内部记忆都和网络中其他单元所使用的隐藏单元有关。</li>
-</ul>
-<p><img src="../img/rnn13.png" alt=""></p>
-<p>直观来说，普通的RNN可以看作是LSTM的一种特殊情况。如果你把input gate设置为全1，forget gate 设置为全0（遗忘全部先前的记忆）并且output gate设置为全1（暴露全部记忆），你几乎得到了标准的RNN，除了一个额外的tanh会将输出限制一下。gating 机制是LSTM能够明确地对长距离依赖建模的原因。通过学习它的的gates的参数，网络学习了它的的记忆应该如何工作。<br>值得一提的是，现存很多LSTM算法的变体。一个常见的是创建一个peephole connections，允许gates步仅仅依赖于之前的隐藏状态st-1，同时也依赖于之前的内部状态ct-1，在gate计算公式里面增加了一个项。还有很多其他的变体。<a href="http://arxiv.org/pdf/1503.04069.pdf" target="_blank" rel="external">LSTM: A Search Space Odyssey</a>总结评估了不同的LSTM算法。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/10/24/RNN教程,part4,实现GRU:LSTM RNN/" data-id="ciunpv6vl000z45pl3dze5tz6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/10/24/RNN教程,part2-实现一个RNN/" data-id="ciusb88yw0012bpplw83rrsr3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -234,7 +368,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/09/21/redux入门/" data-id="ciunpv6v6000o45pl13sbfi1z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/09/21/redux入门/" data-id="ciusb88yd000obpplo7kejw6b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -298,7 +432,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/10/15/编译原理/" data-id="ciunpv6uj000845pl49ul8poo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/10/15/编译原理/" data-id="ciusb88xr0008bpplxqkx1dd6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习笔记/">学习笔记</a></li></ul>
@@ -342,7 +476,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/19/垂直水平居中的方法/" data-id="ciunpv6uw000i45pluznumfvt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/08/19/垂直水平居中的方法/" data-id="ciusb88y4000ibppl0gdl9t9d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -383,7 +517,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/18/三栏自适应布局/" data-id="ciunpv6v0000k45pln50u0hdp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/08/18/三栏自适应布局/" data-id="ciusb88y7000kbpploexbcjyq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css-三栏布局-自适应/">css 三栏布局 自适应</a></li></ul>
@@ -425,7 +559,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/08/05/material-ui使用笔记/" data-id="ciunpv6v8000p45plrk7703xb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/08/05/material-ui使用笔记/" data-id="ciusb88ye000pbpplwugnkq1o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -492,7 +626,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="ciunpv6vc000s45pld0hk995f" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/07/25/es6笔记/" data-id="ciusb88yk000sbpplz2hcguec" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/es6-笔记/">es6 笔记</a></li></ul>
@@ -504,112 +638,9 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
 
 
   
-    <article id="post-secret of javascript ninja读书笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/07/06/secret of javascript ninja读书笔记/" class="article-date">
-  <time datetime="2015-07-06T11:25:00.000Z" itemprop="datePublished">2015-07-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/06/secret of javascript ninja读书笔记/">secret of javascript ninja读书笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="第四章－函数是一等对象">第四章－函数是一等对象</h2><p>一、由于函数可以当作普通的对象来使用，意味着可以在函数中存储属性。利用这个特性，可以实现两个技术：<br>1.存储不重复的函数集合（常用于任务队列中）<br>2.self-memoizing-function<br>存储已有的计算结果，每次调用函数时现查询cache中是否存在，节约计算成本。常见应用有：计算复杂的函数节省计算开销，选择dom元素的函数通过缓存改善性能。</p>
-<p>二、函数有一个鲜为人知的属性－length,这个属性表示函数在声明时的参数个数。注意它跟arguments.length的区别。利用这两个属性，我们可以根据函数个数实现函数重载。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addMethod</span>(<span class="params">object,name,fn</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> old=object[name];</span><br><span class="line">	object[name]=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(fn.length==<span class="built_in">arguments</span>.length)</span><br><span class="line">			<span class="keyword">return</span> fn.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> old==<span class="string">"function"</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> old.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*用法*/</span></span><br><span class="line"><span class="keyword">var</span> ninja=&#123;&#125;;</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br><span class="line">addMethod(ninja,<span class="string">'whatever'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//do something</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>这个例子实现了一个函数，可以给对象添加多个同名方法，在调用时该方法将自动根据参数的个数选择执行的版本。原理是每次添加一个函数时，使用一个闭包将之前版本的函数保存，然后将对象的该方法赋值为一个函数，这个函数根据当前所添加的函数在定义时的参数数量以及调用时实际传入的参数数量进行比较，决定是调用最外层的函数还是向之前的闭包寻找适合的函数。</p>
-<h2 id="如何判断一个对象是不是函数实例">如何判断一个对象是不是函数实例</h2><p>最简单的方法 typeof<br>但是这个问题在一些浏览器下会有一些问题：<br>＋ Firefox html/<object> 的typeof求值结果是function</object></p>
-<ul>
-<li>IE 当尝试获取另一个不复存在的window（iframe）的function对象时，会返回unknown</li>
-<li>safari 的dom nodelist 会被认为是function<br>最好的解决方法是 Object.prototype.toString().call(fn) 如果是函数，会返回”[object Function]”</li>
-</ul>
-<p>三、实现递归函数时，如何指向当前函数？<br>直接引用名字是不可靠的，利用arguments.callee据说以后会被抛弃。这里介绍了一种方法叫 inline function<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ninja=<span class="function"><span class="keyword">function</span> <span class="title">myNinja</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(终止条件)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	<span class="keyword">else</span> </span><br><span class="line">		<span class="keyword">return</span> myNinja();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这里的myNinja只能被函数内部的作用域引用到</p>
-<h2 id="第五章－闭包">第五章－闭包</h2><ul>
-<li>前面几部分关于闭包的内容都是很常见的，比如 创建私有变量，修改函数执行环境。。。</li>
-<li>闭包可以用来实现partial function(部分调用函数)和currying(函数柯里化)，两者的区别在于，partial可以任意安排预先提供的参数的位置，比如<br><code>fn.partial(a,undefined,b)</code><br>undefined的参数将在正式调用时提供.<br>而curry则只能预先提供前一个或几个参数</li>
-<li>立即执行函数可以用来防止全局变量被污染.<h2 id="第九章_runtime_code_evaluation">第九章 runtime code evaluation</h2>动态解析运行js代码有几种方法：</li>
-<li>eval()</li>
-<li>Function构造函数,接受的最后一个参数作为函数主体部分的代码,前面的参数作为函数的参数。e.g var a = new Function(‘a’,’b’,’return a+b’);</li>
-<li>插入script标签，令script.text = 代码;</li>
-<li>定时器</li>
-</ul>
-<p>由于js能够动态地解析运行代码，我们可以利用这个特性去实现一些高级用法，比如将其他语言转译成js再执行、动态重写或注入代码。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/07/06/secret of javascript ninja读书笔记/" data-id="ciunpv6v3000n45plphjuuyu2" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-React-Boostrap-jQuery快速搭建toDoList" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/" class="article-date">
-  <time datetime="2015-05-05T04:35:52.000Z" itemprop="datePublished">2015-05-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/">React+Boostrap+jQuery快速搭建toDoList</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近看到Facebook 发布的React Native感觉好强大，同时也关注到了React这个框架，进行了一些了解之后发现这个东西真的挺好用。上手不算难，上手之后能够大大地提高我们的复杂webapp的开发效率。<br>经过几个小时的学习，已经能自己写出一个todolist应用了，算是一个学习的总结吧。<br>源码我已经发布到了github上，<a href="https://github.com/JenningsL/todolistApp" target="_blank" rel="external">todolist源码地址</a> 使用boostrap和jQuery只是为了美观和方便，并不是React依赖的。</p>
-<p>下面是一些学习的总结：</p>
-<ul>
-<li>React一个优势就是实现组件的可重用，所以组件的划分非常重要，尽量使不同的组件之间松耦合。</li>
-<li>由于React的数据是从组件架构的上层向下层单向流动的，所以控制应用状态的state应该放在所有子组件的共同父组件中，然后在父组件中的Render函数中通过props传递下去</li>
-<li>有时候希望将数据从子组件向上流动，比如说这个todolist里面删除一个项目时希望将对应的id传递给最上层组件，然后进行state的更新。可以通过：父组件将回调函数作为props传给子组件，子组件在事件处理函数中调用该回调函数，然后将数据作为参数传递给父组件，父组件就可以利用这个参数进行更新了。</li>
-<li>事件绑定是通过<code>onClick={this.handleDelete}</code>这样的语句写在xml标签里面的</li>
-<li>异步编程时，比如写动画时，要确保state更新的时机正确。参考代码中的删除淡出效果，是在动画完成之后再setState</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/05/05/React-Boostrap-jQuery快速搭建toDoList/" data-id="ciunpv6vi000w45pl8454fxn9" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React-todoList/">React todoList</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </section>
@@ -640,7 +671,7 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">August 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">July 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">18</span></li></ul>
     </div>
   </div>
 
@@ -652,7 +683,11 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
       <ul>
         
           <li>
-            <a href="/2016/10/24/RNN教程,part2-实现一个RNN/">(no title)</a>
+            <a href="/2016/10/27/RNN教程，part3，BPTT and Vanishing Gradients/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/RNN教程，part1-介绍RNN（译）/">(no title)</a>
           </li>
         
           <li>
@@ -660,15 +695,11 @@ export <span class="keyword">const</span> removeTodo = makeActionCreator(REMOVE_
           </li>
         
           <li>
+            <a href="/2016/10/24/RNN教程,part2-实现一个RNN/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2016/09/21/redux入门/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/15/编译原理/">编译原理</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/19/垂直水平居中的方法/">垂直水平居中的方法</a>
           </li>
         
       </ul>
